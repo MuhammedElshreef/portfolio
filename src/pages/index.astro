@@ -1,5 +1,5 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import NavBar from '../components/NavBar.vue';
 import Layout from '../layouts/Layout.astro';
 import About from '../components/About.vue';
 import Introduce from '../components/Introduce.vue';
@@ -13,6 +13,7 @@ import Contact from '../components/Contact.vue';
 ---
 
 <Layout>
+	<NavBar client:only/>
 	<Introduce />
 	<About />
 	<Experience client:load/>
