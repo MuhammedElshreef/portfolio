@@ -60,7 +60,7 @@ const featProjects = ref([
 </script>
 
 <template>
-  <div id="projects">
+  <div id="projects" class="section">
     <div class="lg:flex flex-col gap-4 lg:gap-16 hidden">
       <div class="flex lg:gap-6 gap-2 items-center">
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">
@@ -71,13 +71,18 @@ const featProjects = ref([
       <div
         v-for="(project, index) in featProjects"
         :key="index"
-        class="flex justify-between py-12"
+        :class="[
+          'flex justify-between py-12 slide-left',
+          index % 2 === 0 ? 'slide-r' : 'slide-l',
+        ]"
         :dir="index % 2 === 0 ? 'ltr' : 'rtl'"
       >
         <div class="w-3/5 group relative">
-          <div
-            class="bg-gradient-to-br from-azure/40 to-iris/40 absolute w-full h-full group-hover:opacity-0 transition-all duration-300 ease-in-out"
-          ></div>
+          <a
+            :href="project.link[1].url"
+            target="_blank"
+            class="bg-gradient-to-br from-azure/40 to-iris/40 absolute w-full h-full group-hover:opacity-0 transition-all duration-300 ease-in-out hover:cursor-pointer"
+          ></a>
           <img :src="project.img" :alt="project.alt" />
         </div>
         <div
@@ -130,7 +135,9 @@ const featProjects = ref([
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">
           <span class="text-azure">03.</span> Some Things I’ve Built
         </h1>
-        <div class="h-[0.5px] lg:w-96 w-44 lg:mt-4 mt-2 bg-paragraph/50"></div>
+        <div
+          class="h-[0.5px] lg:w-96 w-44 lg:mt-4 mt-2 bg-paragraph/50 lg:block hidden"
+        ></div>
       </div>
       <div class="flex flex-col gap-8 py-6">
         <div v-for="(project, index) in featProjects" :key="index">

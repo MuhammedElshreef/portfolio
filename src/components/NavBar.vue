@@ -54,7 +54,7 @@ onMounted(() => {
     }
   );
 
-  links.value.forEach((link) => {
+  links.value.forEach((link: any) => {
     const section = document.querySelector(link.url);
     if (section) {
       observer?.observe(section);

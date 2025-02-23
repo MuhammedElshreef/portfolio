@@ -1,11 +1,11 @@
 <template>
-  <div id="about">
+  <div id="about" class="section">
     <div class="flex flex-col gap-4 lg:gap-6 lg:pb-0 pb-14">
       <div class="flex lg:gap-6 gap-2 items-center">
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">
           <span class="text-azure">01.</span> About me
         </h1>
-        <div class="h-[0.5px] lg:w-96 w-44 lg:mt-4 mt-2 bg-paragraph/50"></div>
+        <div class="h-[0.5px] lg:w-96 w-44 lg:mt-4 mt-2 bg-paragraph/50 lg:block hidden"></div>
       </div>
       <p class="lg:text-xl text-paragraph">
         I am a

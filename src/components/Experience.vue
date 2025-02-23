@@ -16,13 +16,15 @@ const experience = ref([
 </script>
 
 <template>
-  <div id="experience" class="md:py-36">
+  <div id="experience" class="md:py-36 section">
     <div class="flex flex-col gap-4 lg:gap-6">
       <div class="flex lg:gap-6 gap-2 items-center">
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">
           <span class="text-azure">02.</span> Where I've worked
         </h1>
-        <div class="h-[0.5px] lg:w-96 w-20 lg:mt-4 mt-2 bg-paragraph/50"></div>
+        <div
+          class="h-[0.5px] lg:w-96 w-20 lg:mt-4 mt-2 bg-paragraph/50 lg:block hidden"
+        ></div>
       </div>
 
       <div class="flex flex-col lg:flex-row gap-8">

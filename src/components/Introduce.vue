@@ -66,10 +66,10 @@ const about = ref([
 </script>
 
 <template>
-  <div class="lg:pt-8 pt-24">
-    <div class=" md:py-36 pb-14">
+  <div class="lg:pt-8 pt-24 section">
+    <div class="md:py-36 pb-14">
       <div class="flex flex-col gap-6 text-left space-y-4">
-        <div class="flex flex-col gap-4 ">
+        <div class="flex flex-col gap-4">
           <p class="text-lg md:text-xl text-primary uppercase">
             hi,I'm {{ about[0].name }}
           </p>

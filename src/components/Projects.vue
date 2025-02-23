@@ -60,7 +60,7 @@ const featProjects = ref([
 </script>
 
 <template>
-  <div id="projects">
+  <div id="projects" class="section">
     <div class="flex flex-col gap-4 lg:gap-6 lg:pb-0 pb-14 lg:py-16">
       <div class="flex lg:gap-6 gap-2 justify-center items-center">
         <div class="flex flex-col gap-2">

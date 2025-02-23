@@ -13,11 +13,23 @@ import Contact from '../components/Contact.vue';
 ---
 
 <Layout>
-	<NavBar client:load/>
-	<Introduce />
-	<About />
-	<Experience client:load/>
-	<FeaturedProjects/>
-	<Projects/>
-	<Contact/>
+		<NavBar client:load/>
+	<div class="fade-in section">
+		<Introduce />
+	</div>
+	<div class="fade-in section">
+		<About />
+	</div>
+	<div class="fade-in section">
+		<Experience client:load/>
+	</div>
+	<div class="fade-in section">
+		<FeaturedProjects/>
+	</div>
+	<div class="fade-in section">
+		<Projects/>
+	</div>
+	<div class="fade-in section">
+		<Contact/>
+	</div>
 </Layout>
