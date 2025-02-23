@@ -8,66 +8,66 @@ const links = ref([
   { name: "contact", url: "#contact" },
 ]);
 
-// const currentHash = ref<string>(window.location.hash);
+const currentSection = ref<string>(""); // Store the active section
 
-// const scrollToSection = (url: string) => {
-//   const section = document.querySelector(url);
-//   if (section) {
-//     section.scrollIntoView({ behavior: "smooth" });
-//   }
-// };
+const scrollToSection = (url: string) => {
+  const section = document.querySelector(url);
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+  }
+};
 
-// const updateCurrentHash = () => {
-//   const sections = links.value.map((link) => document.querySelector(link.url));
-//   const scrollPosition = window.scrollY + window.innerHeight / 2;
+const updateCurrentSection = () => {
+  const sections = links.value.map((link) => document.querySelector(link.url));
+  const scrollPosition = window.scrollY + window.innerHeight / 2;
 
-//   for (const section of sections) {
-//     if (section) {
-//       const sectionElement = section as HTMLElement;
-//       const sectionTop = sectionElement.offsetTop;
-//       const sectionBottom = sectionTop + sectionElement.offsetHeight;
+  for (const section of sections) {
+    if (section) {
+      const sectionElement = section as HTMLElement;
+      const sectionTop = sectionElement.offsetTop;
+      const sectionBottom = sectionTop + sectionElement.offsetHeight;
 
-//       if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-//         currentHash.value = `#${sectionElement.id}`;
-//         break;
-//       }
-//     }
-//   }
-// };
+      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        currentSection.value = sectionElement.id; // Store the active section
+        break;
+      }
+    }
+  }
+};
 
-// let observer: IntersectionObserver | null = null;
+let observer: IntersectionObserver | null = null;
 
-// onMounted(() => {
-//   window.addEventListener("scroll", updateCurrentHash);
+onMounted(() => {
+  window.addEventListener("scroll", updateCurrentSection);
 
-//   observer = new IntersectionObserver(
-//     (entries) => {
-//       entries.forEach((entry) => {
-//         if (entry.isIntersecting) {
-//           currentHash.value = `#${entry.target.id}`;
-//         }
-//       });
-//     },
-//     {
-//       rootMargin: "0px",
-//       threshold: 0.5,
-//     }
-//   );
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          currentSection.value = entry.target.id; // Update active section
+        }
+      });
+    },
+    {
+      rootMargin: "0px",
+      threshold: 0.5,
+    }
+  );
 
-//   links.value.forEach((link) => {
-//     const section = document.querySelector(link.url);
-//     if (section) {
-//       observer?.observe(section);
-//     }
-//   });
-// });
+  links.value.forEach((link) => {
+    const section = document.querySelector(link.url);
+    if (section) {
+      observer?.observe(section);
+    }
+  });
+});
 
-// onUnmounted(() => {
-//   window.removeEventListener("scroll", updateCurrentHash);
-//   if (observer) {
-//     observer.disconnect();
-//   }
-// });
+onUnmounted(() => {
+  window.removeEventListener("scroll", updateCurrentSection);
+  if (observer) {
+    observer.disconnect();
+  }
+});
 </script>
 
 <template>
@@ -80,7 +80,10 @@ const links = ref([
           <li v-for="(link, index) in links" :key="link.name">
             <a
               class="text-md hover:text-azure hover:cursor-pointer capitalize transition-all duration-300 ease-in-out"
-              :href="link.url"
+              :class="{
+                'text-azure': currentSection === link.url.slice(1),
+              }"
+              @click.prevent="scrollToSection(link.url)"
             >
               {{ link.name }}
             </a>
