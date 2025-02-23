@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+::selection {
+  background: var(--color-iris);
+  color: #000000;
+}
+
+:root {
+  --color-primary: #fafafa;
+  --color-secondary: #f9f9f9;
+  --color-paragraph: #878787;
+  --color-azure: #4287f5;
+  --color-iris: #6f42c1;
+  --color-background: #1f1f1f;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-paragraph: var(--color-paragraph);
+  --color-azure: var(--color-azure);
+  --color-iris: var(--color-iris);
+  --color-background: var(--color-background);
+}

@@ -1,11 +1,22 @@
 ---
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import About from '../components/About.vue';
+import Introduce from '../components/Introduce.vue';
+import Experience from '../components/Experience.vue';
+import FeaturedProjects from '../components/FeaturedProjects.vue';
+import Projects from '../components/Projects.vue';
+import Contact from '../components/Contact.vue';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+	<Introduce />
+	<About />
+	<Experience client:load/>
+	<FeaturedProjects/>
+	<Projects/>
+	<Contact/>
 </Layout>
