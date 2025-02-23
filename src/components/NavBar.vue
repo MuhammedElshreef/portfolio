@@ -8,12 +8,20 @@ const links = ref([
   { name: "contact", url: "#contact" },
 ]);
 
-const currentSection = ref<string>(""); // Store the active section
+const currentSection = ref<string>("");
 
 const scrollToSection = (url: string) => {
   const section = document.querySelector(url);
   if (section) {
-    section.scrollIntoView({ behavior: "smooth" });
+    const sectionElement = section as HTMLElement;
+    const sectionTop = sectionElement.offsetTop; // Top position of the section
+    const offset = window.innerHeight * 0.4; // 20% of the viewport height
+    const targetPosition = sectionTop - offset; // Adjust the scroll position
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth",
+    });
   }
 };
 
@@ -28,7 +36,7 @@ const updateCurrentSection = () => {
       const sectionBottom = sectionTop + sectionElement.offsetHeight;
 
       if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-        currentSection.value = sectionElement.id; // Store the active section
+        currentSection.value = sectionElement.id;
         break;
       }
     }
@@ -44,13 +52,13 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          currentSection.value = entry.target.id; // Update active section
+          currentSection.value = entry.target.id;
         }
       });
     },
     {
       rootMargin: "0px",
-      threshold: 0.5,
+      threshold: 0.3,
     }
   );
 
