@@ -14,9 +14,9 @@ const scrollToSection = (url: string) => {
   const section = document.querySelector(url);
   if (section) {
     const sectionElement = section as HTMLElement;
-    const sectionTop = sectionElement.offsetTop; // Top position of the section
-    const offset = window.innerHeight * 0.4; // 20% of the viewport height
-    const targetPosition = sectionTop - offset; // Adjust the scroll position
+    const sectionTop = sectionElement.offsetTop; 
+    const offset = window.innerHeight * 0.4; 
+    const targetPosition = sectionTop - offset; 
 
     window.scrollTo({
       top: targetPosition,

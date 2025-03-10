@@ -16,7 +16,7 @@ const experience = ref([
 </script>
 
 <template>
-  <div id="experience" class="md:py-36 section">
+  <div id="experience" class="md:py-36 py-12 section">
     <div class="flex flex-col gap-4 lg:gap-6">
       <div class="flex lg:gap-6 gap-2 items-center">
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">

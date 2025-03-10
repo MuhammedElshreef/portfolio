@@ -1,6 +1,6 @@
 <template>
   <div id="contact" class="section">
-    <div class="flex flex-col gap-4 lg:gap-6 lg:py-36 py-12">
+    <div class="flex flex-col gap-4 lg:gap-6 lg:py-32 py-8">
       <h1 class="lg:text-5xl text-2xl font-bold text-primary text-center">
         Get in Touch
       </h1>

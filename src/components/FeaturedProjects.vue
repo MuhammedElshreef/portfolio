@@ -130,7 +130,7 @@ const featProjects = ref([
         </div>
       </div>
     </div>
-    <div class="lg:hidden flex flex-col gap-4 lg:gap-6 py-14">
+    <div class="lg:hidden flex flex-col gap-4 lg:gap-6 py-12">
       <div class="flex lg:gap-6 gap-2 items-center">
         <h1 class="lg:text-5xl text-2xl font-bold text-primary">
           <span class="text-azure">03.</span> Some Things I’ve Built
