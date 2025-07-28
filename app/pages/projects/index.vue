@@ -1,0 +1,74 @@
+<script setup lang="ts">
+const { data } = await useAsyncData("projects", () => {
+  return queryCollection("projects").first();
+});
+useSeoMeta({
+  title: data.value?.seo.title,
+  description: data.value?.seo.description,
+});
+</script>
+<template>
+  <div class="flex flex-col justify-center space-y-12 lg:pt-16 pt-4">
+    <div class="flex-col flex flex-1 lg:space-y-8 space-y-4 lg:w-3/4">
+      <h1
+        class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+      >
+        {{ data?.projects.title }}
+      </h1>
+      <div class="flex">
+        <p class="text-sm text-muted-foreground sm:text-base">
+          {{ data?.projects.description }}
+        </p>
+      </div>
+      <div>
+        <a
+          href="
+          mailto:muhammedelshreef@outlook.com
+        "
+        >
+          <UiButton> Email me </UiButton>
+        </a>
+      </div>
+    </div>
+    <div
+      v-for="(project, index) in data?.projects.items"
+      :key="index"
+      :dir="index % 2 === 0 ? 'rtl' : 'ltr'"
+      class="flex lg:flex-row flex-col space-y-4 w-full lg:gap-8"
+    >
+      <div class="flex-1">
+        <NuxtImg
+          :src="project.image"
+          alt="Project Image"
+          class="object-contain"
+        />
+      </div>
+      <div class="flex-1 flex flex-col lg:space-y-8 space-y-2" dir="ltr">
+        <div class="flex flex-col space-y-2">
+          <h2 class="text-xl font-bold">{{ project.title }}</h2>
+          <p class="text-sm text-muted-foreground">{{ project.description }}</p>
+          <div class="flex flex-wrap pt-2">
+            <UiBadge
+              v-for="(tech, techIndex) in project.techs"
+              :key="techIndex"
+              class="mr-1 mb-1"
+            >
+              {{ tech }}
+            </UiBadge>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <NuxtLink
+            v-for="link in project.links"
+            :key="link.url"
+            :to="link.url"
+            target="_blank"
+            class="text-blue-500 hover:underline"
+          >
+            {{ link.title }}
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

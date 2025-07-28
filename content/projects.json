@@ -1,0 +1,76 @@
+{
+  "seo": {
+    "title": "Muhammed Alsayed - Projects",
+    "description": "Explore the diverse portfolio of Muhammed Alsayed, a front-end web developer. View my featured projects built with various technologies like Vue, Nuxt, TailwindCSS, and more."
+  },
+  "projects": {
+    "title": "Building Interfaces, Bringing Ideas to Life.",
+    "description": "I've worked on a variety of projects, from simple websites to complex web applications. Here are a few of my favorites.",
+    "items": [
+      {
+        "title": "Libya Roots",
+        "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning.",
+        "techs": ["Angular", "TailwindCSS", "Angular Material", "Spartan UI"],
+        "image": "/libya-roots.webp",
+        "alt": "Libya Roots project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "https://libya-roots.vercel.app/"
+          }
+        ]
+      },
+      {
+        "title": "Zad Al-muslim",
+        "description": "Zad Al-Muslim is an Islamic resource platform offering Quran recitations, Islamic radio stations, and educational lessons. It provides easy access to spiritual resources, enhancing religious knowledge and practice with a user-friendly interface.",
+        "techs": ["Nuxt", "Vue", "Pinia", "TailwindCSS", "Shadcn/ui"],
+        "image": "/zad-almuslim.webp",
+        "alt": "Zad Al-muslim project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "https://zad-almuslim.ly/"
+          },
+          {
+            "title": "View Source",
+            "url": "https://github.com/Ahmedelforjani/zad-almuslim"
+          }
+        ]
+      },
+      {
+        "title": "Easy Bank",
+        "description": "Easy Bank is a landing page website It was built by vanilla js and tailwindcss I built this website to test my skills on tailwind.",
+        "techs": ["HTML", "CSS", "JavaScript", "TailwindCSS", "Netlify"],
+        "image": "/easy-image.webp",
+        "alt": "Easy Bank project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "https://easybank-frontend-mentor.netlify.app/"
+          },
+          {
+            "title": "View Source",
+            "url": "https://github.com/MuhammedElshreef/easy-bank"
+          }
+        ]
+      },
+      {
+        "title": "Movie App",
+        "description": "movie clone is a web application that was built by vue I wanted to build this web app to test my skills on vue and fetching data I used vue router for routing and pinia for the state management.",
+        "techs": ["Vercel", "TailwindCSS", "Pinia", "Vue-Router", "Vue"],
+        "image": "/movie-image.webp",
+        "alt": "Movie App project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "http://movie-clone-iota.vercel.app/"
+          },
+          {
+            "title": "View Source",
+            "url": "https://github.com/MuhammedElshreef/movie-clone"
+          }
+        ]
+      }
+    ]
+  }
+}

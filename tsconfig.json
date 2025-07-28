@@ -1,0 +1,15 @@
+// tsconfig.json
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "types": ["@nuxt/content"],
+    "baseUrl": ".", 
+    "paths": {
+      "#content": [".nuxt/types/content.d.ts"],
+      "~/*": ["./*"],
+      "@/*": ["./*"],
+      "~/components/*": ["./components/*"],
+      "~/lib/*": ["app/lib/*"]
+    }
+  }
+}

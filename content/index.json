@@ -1,0 +1,83 @@
+{
+  "seo": {
+    "title": "Muhammed Alsayed - Front-end Web Developer",
+    "description": "Welcome to my portfolio! I'm Muhammed Alsayed, a front-end web developer passionate about creating modern, user-friendly web experiences. Explore my work, experience, and journey in the world of web development."
+  },
+  "title": "Hey, I'm Muhammed 👋",
+  "description": "I'm a Front-end Web Developer with a passion for creating beautiful and functional user interfaces. I enjoy learning new technologies, building things, and helping people.",
+  "about": {
+    "title": "About Me",
+    "description": "I am a front-end developer who is looking to make a change for the community, interested in programming, open to learning everything about technology, specifically web fields with good knowledge in front-end development, and a fast self-learner. I believe in knowledge transfer and can easily collaborate and share knowledge with my colleagues and learn from them."
+  },
+  "experience": {
+    "title": "Work Experience",
+    "items": [
+      {
+        "position": "Internship at",
+        "date": "Jan 2024 - Apr 2024",
+        "company": {
+          "name": "Mataa",
+          "logo": "/mataa-logo.png",
+          "url": "https://mataa.app",
+          "color": "#F9A61A"
+        },
+        "description": "Mataa app, is the largest shopping application in Libya, specializing in providing original products from renowned international brands. Their goal is to offer the best shopping experience to customers across all Libyan cities."
+      }
+    ]
+  },
+  "education": {
+    "title": "Education",
+    "items": [
+      {
+        "degree": "Bachelor's Degree in Software Engineering",
+        "logo": "/uot-logo.png",
+        "institution": "University of Tripoli",
+        "date": "2023-2027"
+      }
+    ]
+  },
+  "skills": {
+    "title": "Skills",
+    "items": [
+      {
+        "name": "HTML"
+      },
+      {
+        "name": "CSS"
+      },
+      {
+        "name": "Tailwind CSS"
+      },
+      {
+        "name": "JavaScript"
+      },
+      {
+        "name": "TypeScript"
+      },
+      {
+        "name": "Vue.js"
+      },
+      {
+        "name": "Nuxt.js"
+      },
+      {
+        "name": "Angular"
+      },
+      {
+        "name": "php"
+      },
+      {
+        "name": "Laravel"
+      },
+      {
+        "name": "MySQL"
+      },
+      {
+        "name": "Git"
+      },
+      {
+        "name": "GitHub"
+      }
+    ]
+  }
+}
