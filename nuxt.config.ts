@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxtjs/color-mode",
     "@nuxt/fonts",
+    "motion-v/nuxt",
   ],
   // This is crucial for Nuxt to include your global Tailwind CSS
   css: ["~/assets/css/tailwind.css"],
