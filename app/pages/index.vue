@@ -73,7 +73,7 @@ useSeoMeta({
             {{ info?.title }}
           </h1>
         </Motion>
-        <div class="flex justify-center">
+        <div>
           <Motion
             :initial="{
               y: 20,
@@ -87,8 +87,9 @@ useSeoMeta({
               duration: 0.6,
               delay: 0.3,
             }"
+            class="flex justify-center"
           >
-            <p class="text-sm text-muted-foreground sm:text-base lg:w-1/2">
+            <p class="text-sm text-muted-foreground sm:text-base lg:w-3/4">
               {{ info?.description }}
             </p>
           </Motion>
