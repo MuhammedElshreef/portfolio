@@ -12,24 +12,56 @@ useSeoMeta({
 <template>
   <div class="flex flex-col justify-center space-y-12">
     <!-- me -->
-    <!-- <div class="flex justify-between gap-2">
+    <div class="flex justify-between gap-2">
       <div class="flex-col flex flex-1 space-y-1.5">
-        <h1
-          class="flex items-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+        <Motion
+          :initial="{
+            y: 20,
+            opacity: 0,
+          }"
+          :animate="{
+            y: 0,
+            opacity: 1,
+          }"
+          :transition="{
+            duration: 0.6,
+            delay: 0.2,
+          }"
         >
-          {{ info?.title }}
-        </h1>
-        <p class="text-base text-muted-foreground sm:text-lg">
-          {{ info?.description }}
-        </p>
+          <h1
+            class="flex items-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+          >
+            {{ info?.title }}
+          </h1>
+          <p class="text-base text-muted-foreground sm:text-lg">
+            {{ info?.description }}
+          </p>
+        </Motion>
       </div>
-      <NuxtImg
-        src="/pfp.jpg"
-        alt="Profile Picture"
-        class="rounded-full lg:h-36 lg:w-36 w-24 h-24 object-cover"
-      />
-    </div> -->
-    <div class="flex flex-col items-center gap-2">
+      <Motion
+        :initial="{
+          scale: 1.1,
+          opacity: 0,
+          filter: 'blur(20px)',
+        }"
+        :animate="{
+          scale: 1,
+          opacity: 1,
+          filter: 'blur(0px)',
+        }"
+        :transition="{
+          duration: 0.6,
+          delay: 0.1,
+        }"
+      >
+        <NuxtImg
+          src="/pfp.jpg"
+          alt="Profile Picture"
+          class="rounded-full lg:h-36 lg:w-36 w-24 h-24 object-cover"
+        />
+      </Motion>
+    </div>
+    <!-- <div class="flex flex-col items-center gap-2">
       <Motion
         :initial="{
           scale: 1.1,
@@ -95,7 +127,7 @@ useSeoMeta({
           </Motion>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <Motion
       :initial="{

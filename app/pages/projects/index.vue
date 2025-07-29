@@ -70,7 +70,7 @@ useSeoMeta({
           <NuxtImg
             :src="project.image"
             alt="Project Image"
-            class="object-contain"
+            class="object-contain rounded-lg"
           />
         </div>
         <div class="flex-1 flex flex-col lg:space-y-8 space-y-2" dir="ltr">
