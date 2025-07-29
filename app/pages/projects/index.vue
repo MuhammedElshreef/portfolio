@@ -9,7 +9,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="flex flex-col justify-center space-y-12 lg:pt-16 pt-4">
+  <div class="flex flex-col justify-center space-y-12 ؛">
     <div class="flex-col flex flex-1 lg:space-y-8 space-y-4 lg:w-3/4">
       <Motion
         :initial="{ y: 20, opacity: 0 }"
