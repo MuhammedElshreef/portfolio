@@ -23,7 +23,7 @@
       {
         "title": "Zad Al-muslim",
         "description": "Zad Al-Muslim is an Islamic resource platform offering Quran recitations, Islamic radio stations, and educational lessons. It provides easy access to spiritual resources, enhancing religious knowledge and practice with a user-friendly interface.",
-        "techs": ["Nuxt", "Vue", "Pinia", "TailwindCSS", "Shadcn/ui"],
+        "techs": ["Nuxt", "Pinia", "TailwindCSS", "Shadcn/ui"],
         "image": "/zad-almuslim.webp",
         "alt": "Zad Al-muslim project screenshot",
         "links": [
@@ -57,7 +57,7 @@
       {
         "title": "Movie App",
         "description": "movie clone is a web application that was built by vue I wanted to build this web app to test my skills on vue and fetching data I used vue router for routing and pinia for the state management.",
-        "techs": ["Vercel", "TailwindCSS", "Pinia", "Vue-Router", "Vue"],
+        "techs": ["Vue", "TailwindCSS", "Pinia", "Vue-Router", "Vercel"],
         "image": "/movie-image.webp",
         "alt": "Movie App project screenshot",
         "links": [
