@@ -56,7 +56,7 @@
       },
       {
         "title": "Movie App",
-        "description": "movie clone is a web application that was built by vue I wanted to build this web app to test my skills on vue and fetching data I used vue router for routing and pinia for the state management.",
+        "description": "Movie Clone is a web application built with Vue. It was my first Vue project, created to practice Vue fundamentals, data fetching, and routing. I used Vue Router for navigation and Pinia for state management. While it's a bit rough around the edges, it served as a great learning experience.",
         "techs": ["Vue", "TailwindCSS", "Pinia", "Vue-Router", "Vercel"],
         "image": "/movie-image.webp",
         "alt": "Movie App project screenshot",
