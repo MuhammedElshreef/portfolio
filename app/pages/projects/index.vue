@@ -102,7 +102,7 @@ useSeoMeta({
               :key="link.url"
               :to="link.url"
               target="_blank"
-              class="text-blue-500 hover:underline"
+              class="text-[#50A2FF] hover:underline"
             >
               {{ link.title }}
             </NuxtLink>
