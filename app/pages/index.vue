@@ -13,31 +13,30 @@ useSeoMeta({
   <div class="flex flex-col justify-center space-y-12">
     <!-- me -->
     <div class="flex justify-between gap-2">
-      <div class="flex-col flex flex-1 space-y-1.5">
-        <Motion
-          :initial="{
-            y: 20,
-            opacity: 0,
-          }"
-          :animate="{
-            y: 0,
-            opacity: 1,
-          }"
-          :transition="{
-            duration: 0.6,
-            delay: 0.2,
-          }"
+      <Motion
+        class="flex flex-col space-y-2 flex-1"
+        :initial="{
+          y: 20,
+          opacity: 0,
+        }"
+        :animate="{
+          y: 0,
+          opacity: 1,
+        }"
+        :transition="{
+          duration: 0.6,
+          delay: 0.2,
+        }"
+      >
+        <h1
+          class="flex items-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
         >
-          <h1
-            class="flex items-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-          >
-            {{ info?.title }}
-          </h1>
-          <p class="text-base text-muted-foreground sm:text-lg">
-            {{ info?.description }}
-          </p>
-        </Motion>
-      </div>
+          {{ info?.title }}
+        </h1>
+        <p class="text-base text-muted-foreground sm:text-lg">
+          {{ info?.description }}
+        </p>
+      </Motion>
       <Motion
         :initial="{
           scale: 1.1,
