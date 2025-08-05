@@ -9,7 +9,7 @@
     "items": [
       {
         "title": "Libya Roots",
-        "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning.",
+        "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning. This project was created for the university as part of the 'Project Management'(ITGS303).",
         "techs": ["Angular", "TailwindCSS", "Angular Material", "Spartan UI"],
         "image": "/libya-roots.webp",
         "alt": "Libya Roots project screenshot",
