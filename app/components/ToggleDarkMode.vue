@@ -4,6 +4,7 @@ const colorMode = useColorMode();
 
 const isAnimating = ref(false);
 const animationOverlayStyle = ref<CSSProperties>({});
+const fadeOut = ref(false);
 
 const nextTheme = computed(() =>
   colorMode.value === "dark" ? "light" : "dark"
@@ -13,31 +14,34 @@ const switchTheme = () => {
   colorMode.preference = nextTheme.value;
 };
 
-const runFallbackAnimation = (event: MouseEvent) => {
+const runFallbackAnimation = () => {
   if (isAnimating.value) return;
 
-  const x = event.clientX;
-  const y = event.clientY;
-  const endRadius = Math.hypot(
-    Math.max(x, window.innerWidth - x),
-    Math.max(y, window.innerHeight - y)
-  );
-
+  // Fullscreen overlay instantly
   animationOverlayStyle.value = {
-    clipPath: `circle(0px at ${x}px ${y}px)`,
+    clipPath: "none",
     backgroundColor: nextTheme.value === "dark" ? "#0a0a0a" : "#ffffff",
+    opacity: "0",
   };
 
   isAnimating.value = true;
+  fadeOut.value = false;
 
+  // Fade in quickly
   setTimeout(() => {
-    animationOverlayStyle.value.clipPath = `circle(${endRadius}px at ${x}px ${y}px)`;
-  }, 20);
+    animationOverlayStyle.value.opacity = "1";
+  }, 10);
 
+  // Switch theme mid-animation
   setTimeout(() => {
     switchTheme();
+    fadeOut.value = true;
+  }, 300);
+
+  // Remove overlay after fade-out
+  setTimeout(() => {
     isAnimating.value = false;
-  }, 620);
+  }, 500);
 };
 
 const toggleTheme = (event: MouseEvent) => {
@@ -67,7 +71,7 @@ const toggleTheme = (event: MouseEvent) => {
       );
     });
   } else {
-    runFallbackAnimation(event);
+    runFallbackAnimation();
   }
 };
 </script>
@@ -77,6 +81,7 @@ const toggleTheme = (event: MouseEvent) => {
     <div
       v-if="isAnimating"
       class="theme-transition-overlay"
+      :class="{ 'fade-out': fadeOut }"
       :style="animationOverlayStyle"
     />
 
@@ -108,12 +113,17 @@ const toggleTheme = (event: MouseEvent) => {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1;
-  transition: clip-path 600ms cubic-bezier(0.76, 0.32, 0.29, 0.99);
+  z-index: 9999;
+  transition: opacity 300ms ease;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  opacity: 1;
+}
+
+.theme-transition-overlay.fade-out {
+  opacity: 0;
 }
 
 ::view-transition-old(root),
