@@ -8,6 +8,19 @@
     "description": "I've worked on a variety of projects, from simple websites to complex web applications. Here are a few of my favorites.",
     "items": [
       {
+        "title": "Alkhidmat Albarmajia",
+        "description": "Alkhidmat Albarmajia is a Libyan technology services company offering programming, IT solutions, and electronic equipment supply. I worked as a freelancer to build a modern, responsive Astro-based website with a custom Vue component, showcasing their services and commitment to high-quality tech solutions.",
+        "techs": ["Astro", "Vue", "HTML", "CSS", "JavaScript", "TailwindCSS"],
+        "image": "/kbtech.png",
+        "alt": "Alkhidmat Albarmajia project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "https://kbtech.ly/"
+          }
+        ]
+      },
+      {
         "title": "Libya Roots",
         "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning. This project was created for the university as part of the 'Project Management'(ITGS303) course.",
         "techs": ["Angular", "TailwindCSS", "Angular Material", "Spartan UI"],
