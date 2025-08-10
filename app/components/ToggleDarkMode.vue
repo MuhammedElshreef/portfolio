@@ -1,9 +1,7 @@
 <script setup lang="ts">
-// Helper to get color mode (works with Nuxt Color Mode)
 import { type CSSProperties, computed, ref } from "vue";
 const colorMode = useColorMode();
 
-// Refs for the fallback animation state
 const isAnimating = ref(false);
 const animationOverlayStyle = ref<CSSProperties>({});
 
@@ -15,7 +13,6 @@ const switchTheme = () => {
   colorMode.preference = nextTheme.value;
 };
 
-// CORRECTED fallback animation for Safari and other unsupported browsers
 const runFallbackAnimation = (event: MouseEvent) => {
   if (isAnimating.value) return;
 
@@ -26,27 +23,17 @@ const runFallbackAnimation = (event: MouseEvent) => {
     Math.max(y, window.innerHeight - y)
   );
 
-  // 1. PREPARE the initial style for the overlay BEFORE it is rendered.
-  // It will start as an invisible 0px circle at the click position.
   animationOverlayStyle.value = {
     clipPath: `circle(0px at ${x}px ${y}px)`,
-    // IMPORTANT: Use your actual theme's background colors here.
-    // Using CSS variables is the best practice if you have them set up.
     backgroundColor: nextTheme.value === "dark" ? "#0a0a0a" : "#ffffff",
   };
 
-  // 2. NOW, set isAnimating to true. The overlay will be added to the DOM
-  // already styled as an invisible circle, preventing any "flash".
   isAnimating.value = true;
 
-  // 3. Use a minimal timeout. This gives the browser a moment to paint the
-  // initial state before we ask it to transition to the final state.
   setTimeout(() => {
     animationOverlayStyle.value.clipPath = `circle(${endRadius}px at ${x}px ${y}px)`;
-  }, 20); // A tiny delay (20ms) is enough to ensure a smooth start.
+  }, 20);
 
-  // 4. After the animation duration, switch the theme and clean up.
-  // The timeout is the animation duration (600ms) + our small delay (20ms).
   setTimeout(() => {
     switchTheme();
     isAnimating.value = false;
@@ -54,10 +41,7 @@ const runFallbackAnimation = (event: MouseEvent) => {
 };
 
 const toggleTheme = (event: MouseEvent) => {
-  // This part remains the same, using the modern API when available
-  // and the corrected fallback when not.
   if (document.startViewTransition) {
-    // ... (Your original, unchanged View Transition logic goes here)
     const isDark = colorMode.value === "dark";
     const transition = document.startViewTransition(() => switchTheme());
     transition.ready.then(() => {
@@ -120,13 +104,16 @@ const toggleTheme = (event: MouseEvent) => {
 <style>
 .theme-transition-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  z-index: 1;
   transition: clip-path 600ms cubic-bezier(0.76, 0.32, 0.29, 0.99);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 ::view-transition-old(root),
@@ -134,14 +121,12 @@ const toggleTheme = (event: MouseEvent) => {
   animation: none;
   mix-blend-mode: normal;
 }
-
 .dark::view-transition-new(root) {
   z-index: 9999;
 }
 .dark::view-transition-old(root) {
   z-index: 1;
 }
-
 html:not(.dark)::view-transition-old(root) {
   z-index: 9999;
 }
