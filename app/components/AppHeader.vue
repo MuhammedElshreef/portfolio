@@ -33,7 +33,7 @@ const links = [
               class="inline-block h-5 w-5 text-muted-foreground hover:text-foreground rounded-full p-1 transition-colors hover:scale-110 cursor-pointer mt-2"
             />
           </NuxtLink>
-          <NuxtLink to="/Elshreef.pdf" target="_blank">
+          <NuxtLink to="/Elshreef-CV.pdf" target="_blank">
             <Icon
               name="lucide:file-text"
               class="inline-block h-5 w-5 text-muted-foreground hover:text-foreground rounded-full p-1 transition-colors hover:scale-110 cursor-pointer mt-2"
