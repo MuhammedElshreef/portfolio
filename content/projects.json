@@ -21,6 +21,28 @@
         ]
       },
       {
+        "title": "Weather Now",
+        "description": "  Weather Now is a weather application that provides real-time weather data through a clean, responsive interface. Users can search for locations worldwide, view current conditions, browse a 7-day forecast, and explore hourly temperature changes. The app supports metric and imperial units with local storage persistence. Built as a Frontend Mentor challenge.",
+        "techs": [
+          "React",
+          "TypeScript",
+          "Vite",
+          "TailwindCSS",
+          "Zustand",
+          "React Router",
+          "shadcn/ui",
+          "Lucide React"
+        ],
+        "image": "/weather-now.webp",
+        "alt": "Weather Now project screenshot",
+        "links": [
+          {
+            "title": "Visit Website",
+            "url": "https://weather-now-mentor.vercel.app/"
+          }
+        ]
+      },
+      {
         "title": "Libya Roots",
         "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning. This project was created for the university as part of the 'Project Management'(ITGS303) course.",
         "techs": ["Angular", "TailwindCSS", "Angular Material", "Spartan UI"],
