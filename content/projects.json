@@ -9,7 +9,7 @@
     "items": [
       {
         "title": "LibyanaHub Platform",
-        "description": "LibyanaHub is a comprehensive e-learning and fitness coaching platform designed for the Libyan market. It features course browsing and enrollment, fitness coach subscriptions with tiered pricing, an admin dashboard for content management, and full Arabic/English bilingual support with RTL layout. The platform was publicly demonstrated at a tech expo in December 2025 and is currently in production development.",
+        "description": "A comprehensive e-learning and fitness coaching platform for the Libyan market. Features course enrollment, fitness coach subscriptions with tiered pricing, admin dashboard, and full Arabic/English bilingual support with RTL layout.",
         "techs": ["Angular", "TypeScript", "TailwindCSS", "PrimeNG", "RxJS"],
         "image": "/libyanahub.webp",
         "alt": "LibyanaHub Platform project screenshot",
@@ -21,8 +21,60 @@
         ]
       },
       {
+        "title": "LibyanaHub Collab",
+        "description": "A core module of the LibyanaHub platform born from a collaboration between Libyana and medical students to track and monitor patient health. Provides patient record management, medical history tracking, and streamlined communication between healthcare providers through a powerful admin panel.",
+        "techs": [
+          "Laravel 13",
+          "Filament 5",
+          "PHP 8.3",
+          "Tailwind CSS 4",
+          "Vite",
+          "Laravel Sanctum",
+          "Pest"
+        ],
+        "image": "/libyanahub-collab.webp",
+        "alt": "LibyanaHub Collab project screenshot",
+        "links": []
+      },
+      {
+        "title": "Orders Management System",
+        "description": "A full-featured business order and invoice management system. Covers the complete order lifecycle from customer and product management to invoice generation with PDF export, payment tracking, and real-time financial analytics.",
+        "techs": [
+          "Laravel",
+          "Filament",
+          "Livewire",
+          "TailwindCSS",
+          "Alpine.js",
+          "PHP",
+          "Vite"
+        ],
+        "image": "/orders-management.webp",
+        "alt": "Orders Management System project screenshot",
+        "links": []
+      },
+      {
+        "title": "Elzwetina Group",
+        "description": "Corporate website for Libya's leading industrial and safety solutions provider. A full-stack Laravel app with product showcase, brand partnerships, client portfolio, contact system with email notifications, and a Filament-powered admin panel.",
+        "techs": [
+          "Laravel",
+          "Filament",
+          "Alpine.js",
+          "TailwindCSS",
+          "Vite",
+          "MySQL"
+        ],
+        "image": "/elzwetina-group.webp",
+        "alt": "Elzwetina Group project screenshot",
+        "links": [
+          {
+            "title": "Website (Coming Soon)",
+            "url": "#"
+          }
+        ]
+      },
+      {
         "title": "Alkhidmat Albarmajia",
-        "description": "Alkhidmat Albarmajia is a Libyan technology services company offering programming, IT solutions, and electronic equipment supply. I worked as a freelancer to build a modern, responsive Astro-based website with a custom Vue component, showcasing their services and commitment to high-quality tech solutions.",
+        "description": "A modern, responsive website for a Libyan tech services company. Built as a freelancer using Astro with a custom Vue component, showcasing their programming, IT solutions, and electronic equipment services.",
         "techs": ["Astro", "Vue", "HTML", "CSS", "JavaScript", "TailwindCSS"],
         "image": "/kbtech.png",
         "alt": "Alkhidmat Albarmajia project screenshot",
@@ -35,7 +87,7 @@
       },
       {
         "title": "Weather Now",
-        "description": "  Weather Now is a weather application that provides real-time weather data through a clean, responsive interface. Users can search for locations worldwide, view current conditions, browse a 7-day forecast, and explore hourly temperature changes. The app supports metric and imperial units with local storage persistence. Built as a Frontend Mentor challenge.",
+        "description": "Real-time weather app with a clean, responsive interface. Search locations worldwide, view current conditions, browse 7-day forecasts, and explore hourly temperature trends with metric/imperial unit support.",
         "techs": [
           "React",
           "TypeScript",
@@ -57,7 +109,7 @@
       },
       {
         "title": "Libya Roots",
-        "description": "Libya Roots is a tourism platform built to showcase Libya’s cultural and historical landmarks through an interactive and responsive web experience. Developed as part of the NovaMinds team, I was responsible for developing the web application, enabling users to explore categorized destinations, view locations on maps, and save favorites for trip planning. This project was created for the university as part of the 'Project Management'(ITGS303) course.",
+        "description": "A tourism platform showcasing Libya’s cultural and historical landmarks. Users can explore categorized destinations, view locations on interactive maps, and save favorites for trip planning.",
         "techs": ["Angular", "TailwindCSS", "Angular Material", "Spartan UI"],
         "image": "/libya-roots.webp",
         "alt": "Libya Roots project screenshot",
@@ -69,8 +121,23 @@
         ]
       },
       {
+        "title": "Telegram News Bot",
+        "description": "An automated Telegram bot that aggregates financial and forex news from multiple RSS feeds, translates articles into Arabic using the Lingva API, and delivers them to a Telegram channel with images and read-more links. Uses MongoDB to track sent articles and avoid duplicates, with automatic cleanup and rate-limit handling.",
+        "techs": [
+          "Node.js",
+          "Telegraf",
+          "MongoDB",
+          "Mongoose",
+          "RSS Parser",
+          "Lingva Translate API"
+        ],
+        "image": "/telegram-news-bot.webp",
+        "alt": "Telegram News Bot project screenshot",
+        "links": []
+      },
+      {
         "title": "Zad Al-muslim",
-        "description": "Zad Al-Muslim is an Islamic resource platform offering Quran recitations, Islamic radio stations, and educational lessons. It provides easy access to spiritual resources, enhancing religious knowledge and practice with a user-friendly interface.",
+        "description": "An Islamic resource platform offering Quran recitations, Islamic radio stations, and educational lessons. Provides easy access to spiritual resources with a user-friendly interface.",
         "techs": ["Nuxt", "Pinia", "TailwindCSS", "Shadcn/ui"],
         "image": "/zad-almuslim.webp",
         "alt": "Zad Al-muslim project screenshot",
@@ -87,7 +154,7 @@
       },
       {
         "title": "Easy Bank",
-        "description": "Easy Bank is a landing page website It was built by vanilla js and tailwindcss I built this website to test my skills on tailwind.",
+        "description": "A responsive landing page built with vanilla JavaScript and TailwindCSS. Created as a Frontend Mentor challenge to sharpen my Tailwind skills.",
         "techs": ["HTML", "CSS", "JavaScript", "TailwindCSS", "Netlify"],
         "image": "/easy-image.webp",
         "alt": "Easy Bank project screenshot",
@@ -104,7 +171,7 @@
       },
       {
         "title": "Movie App",
-        "description": "Movie Clone is a web application built with Vue. It was my first Vue project, created to practice Vue fundamentals, data fetching, and routing. I used Vue Router for navigation and Pinia for state management. While it's a bit rough around the edges, it served as a great learning experience.",
+        "description": "A movie browsing app built with Vue as my first Vue project. Features data fetching from an API, Vue Router navigation, and Pinia state management.",
         "techs": ["Vue", "TailwindCSS", "Pinia", "Vue-Router", "Vercel"],
         "image": "/movie-image.webp",
         "alt": "Movie App project screenshot",

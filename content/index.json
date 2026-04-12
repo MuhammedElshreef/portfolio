@@ -84,7 +84,22 @@
         "name": "Laravel"
       },
       {
+        "name": "Filament"
+      },
+      {
+        "name": "Livewire"
+      },
+      {
+        "name": "React"
+      },
+      {
+        "name": "Node.js"
+      },
+      {
         "name": "MySQL"
+      },
+      {
+        "name": "MongoDB"
       },
       {
         "name": "Git"

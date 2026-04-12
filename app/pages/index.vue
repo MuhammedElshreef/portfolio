@@ -3,6 +3,12 @@ const { data: info } = await useAsyncData("index", () => {
   return queryCollection("index").first();
 });
 
+const { data: projectsData } = await useAsyncData("projects", () => {
+  return queryCollection("projects").first();
+});
+
+const imgErrors = reactive<Record<number, boolean>>({});
+
 useSeoMeta({
   title: info.value?.seo.title,
   description: info.value?.seo.description,
@@ -262,32 +268,86 @@ useSeoMeta({
       </div>
     </div>
 
-    <Motion
-      :initial="{
-        y: 20,
-        opacity: 0,
-      }"
-      :animate="{
-        y: 0,
-        opacity: 1,
-      }"
-      :transition="{
-        duration: 0.6,
-        delay: 0.7,
-      }"
-    >
-      <div class="flex flex-col items-center space-y-4">
-        <h2 class="lg:text-4xl text-3xl font-semibold">Discover My Projects</h2>
-        <p class="text-muted-foreground lg:w-2/3 text-center lg:text-lg">
-          Check out my projects on the
-          <NuxtLink to="/projects" class="underline text-primary"
-            >Projects</NuxtLink
-          >
-          page to see what I've been working on.
-        </p>
-      </div>
-    </Motion>
+    <!-- Projects -->
+    <div class="flex flex-col space-y-12">
+      <Motion
+        :initial="{ y: 20, opacity: 0 }"
+        :animate="{ y: 0, opacity: 1 }"
+        :transition="{ duration: 0.6, delay: 0.7 }"
+      >
+        <div class="flex-col flex flex-1 lg:space-y-4 space-y-2">
+          <h2 class="text-2xl font-semibold">
+            {{ projectsData?.projects.title }}
+          </h2>
+          <p class="text-sm text-muted-foreground sm:text-base">
+            {{ projectsData?.projects.description }}
+          </p>
+        </div>
+      </Motion>
 
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Motion
+          v-for="(project, index) in projectsData?.projects.items"
+          :key="index"
+          :initial="{ opacity: 0, y: 20 }"
+          :animate="{ opacity: 1, y: 0 }"
+          :transition="{
+            duration: 0.5,
+            delay: 0.8 + index * 0.1,
+          }"
+        >
+          <div class="flex flex-col rounded-lg border border-border overflow-hidden h-full">
+            <div class="relative aspect-video">
+              <NuxtImg
+                v-if="project.image && !imgErrors[index]"
+                :src="project.image"
+                :alt="project.alt"
+                class="w-full h-full object-contain bg-muted"
+                @error="imgErrors[index] = true"
+              />
+              <div
+                v-else
+                class="w-full h-full bg-gradient-to-br from-primary/20 via-primary/10 to-muted relative overflow-hidden flex items-center justify-center"
+              >
+                <div class="absolute inset-0 opacity-10">
+                  <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full border-2 border-primary" />
+                  <div class="absolute -bottom-4 -left-4 w-24 h-24 rounded-full border-2 border-primary" />
+                  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full border border-primary" />
+                </div>
+                <span class="text-xl font-bold text-foreground/70 z-10 px-4 text-center">
+                  {{ project.title }}
+                </span>
+              </div>
+            </div>
+            <div class="flex flex-col flex-1 p-4 space-y-3">
+              <h3 class="text-lg font-bold">{{ project.title }}</h3>
+              <p class="text-sm text-muted-foreground line-clamp-3">
+                {{ project.description }}
+              </p>
+              <div class="flex flex-wrap gap-1">
+                <UiBadge v-for="tech in project.techs" :key="tech" class="text-xs">
+                  {{ tech }}
+                </UiBadge>
+              </div>
+              <div class="flex-1" />
+              <div v-if="project.links?.length" class="flex items-center space-x-2 pt-1">
+                <NuxtLink
+                  v-for="link in project.links"
+                  :key="link.url"
+                  :to="link.url"
+                  target="_blank"
+                  class="text-sm text-[#50A2FF] hover:underline"
+                >
+                  {{ link.title }}
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </Motion>
+      </div>
+    </div>
+
+    <!-- Get in Touch -->
     <Motion
       :initial="{
         y: 20,
