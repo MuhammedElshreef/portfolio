@@ -172,7 +172,7 @@ useSeoMeta({
               </h3>
             </div>
             <div class="flex-1 border-b border-border h-1" />
-            <p class="text-xs text-muted-foreground">
+            <p class="text-xs text-muted-foreground whitespace-nowrap">
               {{ item?.date }}
             </p>
           </div>

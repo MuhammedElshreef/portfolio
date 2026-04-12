@@ -8,6 +8,19 @@
     "description": "I've worked on a variety of projects, from simple websites to complex web applications. Here are a few of my favorites.",
     "items": [
       {
+        "title": "LibyanaHub Platform",
+        "description": "LibyanaHub is a comprehensive e-learning and fitness coaching platform designed for the Libyan market. It features course browsing and enrollment, fitness coach subscriptions with tiered pricing, an admin dashboard for content management, and full Arabic/English bilingual support with RTL layout. The platform was publicly demonstrated at a tech expo in December 2025 and is currently in production development.",
+        "techs": ["Angular", "TypeScript", "TailwindCSS", "PrimeNG", "RxJS"],
+        "image": "/libyanahub.webp",
+        "alt": "LibyanaHub Platform project screenshot",
+        "links": [
+          {
+            "title": "Demo (Coming Soon)",
+            "url": "#"
+          }
+        ]
+      },
+      {
         "title": "Alkhidmat Albarmajia",
         "description": "Alkhidmat Albarmajia is a Libyan technology services company offering programming, IT solutions, and electronic equipment supply. I worked as a freelancer to build a modern, responsive Astro-based website with a custom Vue component, showcasing their services and commitment to high-quality tech solutions.",
         "techs": ["Astro", "Vue", "HTML", "CSS", "JavaScript", "TailwindCSS"],

@@ -13,6 +13,17 @@
     "title": "Work Experience",
     "items": [
       {
+        "position": "Front-end Developer at Tadamon for",
+        "date": "Dec 2025 - Present",
+        "company": {
+          "name": "Libyana",
+          "logo": "/libyana-logo.png",
+          "url": "https://libyana.ly",
+          "color": "#951B81"
+        },
+        "description": "Working on the \"Libyana Hub\" project, a digital platform by Libyana, Libya's leading mobile network operator."
+      },
+      {
         "position": "Internship at",
         "date": "Jan 2024 - Apr 2024",
         "company": {
