@@ -362,17 +362,17 @@ useSeoMeta({
         delay: 0.8,
       }"
     >
-      <div class="flex flex-col items-center space-y-4">
+      <div class="flex flex-col items-center space-y-6 rounded-lg border border-border p-8 lg:p-12">
         <h2 class="lg:text-4xl text-3xl font-semibold">Get in Touch</h2>
         <p class="text-muted-foreground lg:w-2/3 text-center lg:text-lg">
-          If you have any work-related inquiries, feel free to send me an
-          <a
-            href="mailto:muhammedelshreef@outlook.com"
-            class="underline text-primary"
-            >Email</a
-          >
-          with your specific question. I'll respond as soon as I can.
+          Have a project in mind or want to collaborate? Feel free to reach out and I'll get back to you as soon as possible.
         </p>
+        <a href="mailto:muhammedelshreef@outlook.com">
+          <UiButton size="lg" class="gap-2">
+            <Icon name="lucide:mail" class="h-5 w-5" />
+            Send Email
+          </UiButton>
+        </a>
       </div>
     </Motion>
   </div>
