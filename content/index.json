@@ -13,7 +13,7 @@
     "title": "Work Experience",
     "items": [
       {
-        "position": "Full-Stack Developer at Tadamon for",
+        "position": "Full-Time Full-Stack Developer at Tadamon for",
         "date": "Dec 2025 - Present",
         "company": {
           "name": "Libyana",
@@ -22,6 +22,16 @@
           "color": "#951B81"
         },
         "description": "Working on the \"Libyana Hub\" project, a digital platform by Libyana, Libya's leading mobile network operator."
+      },
+      {
+        "position": "Part-Time Front-End Developer at",
+        "date": "May 2026 - Present",
+        "company": {
+          "name": "Tourista",
+          "logo": "/tourista-logo.png",
+          "url": "#",
+          "color": "#37BC69"
+        }
       },
       {
         "position": "Internship at",
