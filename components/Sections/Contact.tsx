@@ -46,7 +46,7 @@ export default function Contact() {
       </Reveal>
       <footer className="mt-28 flex flex-wrap items-center justify-between gap-4 border-t border-hairline pt-6">
         <p className="font-mono text-xs text-ink-muted">
-          © {new Date().getFullYear()} Muhammed Alsayed · <span lang="ar">محمد السيد</span>
+          © {new Date().getFullYear()} Muhammed Alsayed
         </p>
         <p className="font-mono text-xs text-ink-muted">
           Built with Next.js + Three.js + Claude — no screenshots, all drawn
