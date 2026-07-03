@@ -39,9 +39,9 @@ export const about = {
   index: "01",
   title: "About",
   paragraphs: [
-    "I'm a full-stack developer in Tripoli, Libya — building Libyana Hub, the digital platform of Libya's leading mobile operator.",
-    "Laravel on the back-end. Angular, Vue, and React on the front. I ship complete products end to end — from the data model to the last pixel.",
-    "Software engineering student at the University of Tripoli. I learn fast, share what I learn, and build for my community.",
+    "I'm a Full-Stack Web Developer with a passion for creating beautiful and functional web applications. I enjoy learning new technologies, building things, and helping people.",
+    "I work across the whole stack — designing back-end architectures and crafting front-end interfaces — to ship complete products end to end, from the data model to the last pixel.",
+    "I'm always exploring new tools and ideas. I learn fast, share what I learn, and enjoy collaborating with others to build things that matter.",
   ],
   photoAlt: "Portrait of Muhammed Alsayed",
   initials: "MA",
