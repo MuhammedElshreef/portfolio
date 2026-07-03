@@ -224,6 +224,7 @@ export const contact = {
   subheading:
     "Have a project in mind, a role to fill, or just want to talk web? My inbox is open.",
   email: "muhammedelshreef50@gmail.com",
+  cv: { title: "View CV", url: "/Muhammed-Alsayed-CV.pdf" },
   socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
 };
 

@@ -23,6 +23,14 @@ export default function Contact() {
           >
             {contact.email}
           </a>
+          <a
+            href={contact.cv.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-sm uppercase tracking-widest text-ink underline decoration-hairline underline-offset-8 transition-colors hover:text-blue hover:decoration-blue"
+          >
+            {contact.cv.title} ↗
+          </a>
           {contact.socials.map((social) => (
             <a
               key={social.url}

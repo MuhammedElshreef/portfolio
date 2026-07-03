@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav } from "@/lib/content";
+import { contact, nav } from "@/lib/content";
 
 const LOGO = "m.alsayed";
 
@@ -76,13 +76,30 @@ export default function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href={contact.cv.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-xs uppercase tracking-widest text-blue transition-opacity hover:opacity-70"
+            >
+              CV ↗
+            </a>
+          </li>
         </ul>
-        <a
-          href="#contact"
-          className="font-mono text-xs uppercase tracking-widest text-blue sm:hidden"
-        >
-          Contact
-        </a>
+        <div className="flex items-center gap-6 sm:hidden">
+          <a
+            href={contact.cv.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-xs uppercase tracking-widest text-blue"
+          >
+            CV ↗
+          </a>
+          <a href="#contact" className="font-mono text-xs uppercase tracking-widest text-ink-muted">
+            Contact
+          </a>
+        </div>
       </nav>
     </header>
   );

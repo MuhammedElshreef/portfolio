@@ -43,12 +43,12 @@ export default function ProjectCard({ project }: { project: Project }) {
         }}
       />
 
-      <div className="flex aspect-[2/1] items-center justify-center border-b border-hairline p-6 sm:aspect-[9/4]">
+      <div className="flex h-32 items-center justify-center border-b border-hairline p-3 sm:aspect-[9/4] sm:h-auto sm:p-6">
         {Art && <Art />}
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 p-6 sm:p-7">
-        <h3 className="flex items-center justify-between text-xl font-semibold text-ink">
+      <div className="flex flex-1 flex-col gap-3 p-4 sm:gap-4 sm:p-7">
+        <h3 className="flex items-center justify-between text-lg font-semibold text-ink sm:text-xl">
           {project.title}
           <span
             aria-hidden
