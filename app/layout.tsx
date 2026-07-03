@@ -40,6 +40,7 @@ export const metadata: Metadata = {
   },
   authors: [{ name: hero.name, url: seo.url }],
   creator: hero.name,
+  verification: { google: "OyGvo6F2g1HHO67c1GBQY85gsKFkDFG2DokAFhUdKJg" },
   keywords: [
     hero.name,
     seo.arabicName,
