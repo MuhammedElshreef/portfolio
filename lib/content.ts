@@ -24,7 +24,8 @@ export const seo = {
   url: "https://alsayed.ly",
   title: "Muhammed Alsayed — Full-Stack Web Developer",
   description:
-    "Portfolio of Muhammed Alsayed, a full-stack web developer building production-grade web platforms — Laravel and Filament back-ends, Angular, Vue, and React front-ends.",
+    "Portfolio of Muhammed Alsayed (محمد السيد), a full-stack web developer in Tripoli, Libya building production-grade web platforms — Laravel and Filament back-ends, Angular, Vue, and React front-ends.",
+  arabicName: "محمد السيد",
 };
 
 export const hero = {

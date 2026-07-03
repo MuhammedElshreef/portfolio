@@ -40,6 +40,19 @@ export const metadata: Metadata = {
   },
   authors: [{ name: hero.name, url: seo.url }],
   creator: hero.name,
+  keywords: [
+    hero.name,
+    seo.arabicName,
+    "Full-Stack Web Developer",
+    "مطور ويب",
+    "Tripoli",
+    "Libya",
+    "ليبيا",
+    "Laravel",
+    "Angular",
+    "Vue",
+    "React",
+  ],
 };
 
 // Structured data so search engines understand who this site is about
@@ -47,6 +60,7 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: hero.name,
+  alternateName: seo.arabicName,
   url: seo.url,
   jobTitle: hero.role.join(" "),
   email: `mailto:${contact.email}`,
