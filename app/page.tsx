@@ -1,7 +1,10 @@
 import Background from "@/components/Scene/Background";
+import Cursor from "@/components/Cursor";
+import Marquee from "@/components/Marquee";
 import Nav from "@/components/Nav";
 import Preloader from "@/components/Preloader";
 import ScrollToTop from "@/components/ScrollToTop";
+import SectionCounter from "@/components/SectionCounter";
 import SmoothScroll from "@/components/SmoothScroll";
 import Hero from "@/components/Sections/Hero";
 import About from "@/components/Sections/About";
@@ -16,9 +19,12 @@ export default function Home() {
       <Preloader />
       <Background />
       <Nav />
+      <Cursor />
+      <SectionCounter />
       <ScrollToTop />
       <main>
         <Hero />
+        <Marquee />
         <About />
         <Experience />
         <Projects />

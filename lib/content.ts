@@ -230,6 +230,18 @@ export const contact = {
   socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
 };
 
+export const marquee = [
+  "Available for work",
+  "Laravel",
+  "Filament",
+  "Angular",
+  "Vue",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "Node.js",
+];
+
 export const nav = {
   name: "Muhammed Alsayed",
   links: [

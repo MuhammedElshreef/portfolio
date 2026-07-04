@@ -82,6 +82,48 @@ body {
   animation: drawIn 1.2s var(--ease-out-expo);
 }
 
+/* Hover underline that draws itself left→right, matching the SVG draw-in language */
+.link-draw {
+  background-image: linear-gradient(to right, currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: left calc(100% - 0.05em);
+  background-repeat: no-repeat;
+  transition: background-size 0.45s var(--ease-out-expo);
+}
+.link-draw:hover {
+  background-size: 100% 1px;
+}
+/* Variant with a resting hairline under the drawn line */
+.link-draw-rest {
+  background-image: linear-gradient(to right, currentColor, currentColor),
+    linear-gradient(to right, var(--hairline), var(--hairline));
+  background-size:
+    0% 1px,
+    100% 1px;
+  background-position:
+    left calc(100% - 0.05em),
+    left calc(100% - 0.05em);
+  background-repeat: no-repeat;
+  transition: background-size 0.45s var(--ease-out-expo);
+}
+.link-draw-rest:hover {
+  background-size:
+    100% 1px,
+    100% 1px;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The custom cursor replaces the native one (fine pointers only) */
+html.cursor-hidden,
+html.cursor-hidden * {
+  cursor: none !important;
+}
+
 @keyframes blink {
   0%,
   49% {

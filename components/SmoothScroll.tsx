@@ -6,6 +6,20 @@ import Lenis from "lenis";
 // Shared so the particle field can read scroll velocity without re-renders.
 export const scrollState = { velocity: 0, progress: 0 };
 
+let activeLenis: Lenis | null = null;
+
+// Lets overlays (mobile menu) freeze the page under them.
+export const scrollControl = {
+  stop() {
+    activeLenis?.stop();
+    document.documentElement.style.overflow = "hidden";
+  },
+  start() {
+    activeLenis?.start();
+    document.documentElement.style.overflow = "";
+  },
+};
+
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
@@ -18,6 +32,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       anchors: true,
     });
     lenisRef.current = lenis;
+    activeLenis = lenis;
 
     lenis.on("scroll", ({ velocity, progress }: { velocity: number; progress: number }) => {
       scrollState.velocity = velocity;
@@ -35,6 +50,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       cancelAnimationFrame(rafId);
       lenis.destroy();
       lenisRef.current = null;
+      activeLenis = null;
     };
   }, []);
 

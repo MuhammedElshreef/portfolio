@@ -2,6 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 import { useMemo } from "react";
+import CameraRig from "./CameraRig";
 import ParticleField from "./ParticleField";
 import WaveGrid from "./WaveGrid";
 import { useMediaQuery } from "./useMediaQuery";
@@ -30,6 +31,7 @@ export default function SceneCanvas() {
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
+        <CameraRig settings={settings} />
         <ParticleField settings={settings} />
         <WaveGrid settings={settings} />
       </Canvas>

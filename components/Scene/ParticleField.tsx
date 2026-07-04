@@ -4,11 +4,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { scrollState } from "../SmoothScroll";
+import { sceneEvents } from "./sceneEvents";
 import type { SceneSettings } from "./SceneCanvas";
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uDrift;
+  uniform float uScroll;
+  uniform float uBurstTime;
   uniform vec2 uMouse;
   attribute float aScale;
   attribute float aTint;
@@ -18,18 +21,27 @@ const vertexShader = /* glsl */ `
   void main() {
     vec3 p = position;
 
-    // Slow layered wave drift
+    // The field breathes open as you travel down the page
+    p.xz *= 1.0 + uScroll * 0.22;
+
+    // Slow layered wave drift, livelier the deeper you scroll
     float t = uTime * 0.18;
-    p.y += sin(p.x * 0.35 + t) * 0.6 + cos(p.z * 0.3 + t * 1.3) * 0.4;
-    p.x += sin(p.y * 0.25 + t * 0.7) * 0.35;
+    float amp = 1.0 + uScroll * 0.6;
+    p.y += (sin(p.x * 0.35 + t) * 0.6 + cos(p.z * 0.3 + t * 1.3) * 0.4) * amp;
+    p.x += sin(p.y * 0.25 + t * 0.7) * 0.35 * amp;
 
     // Gentle pull toward the mouse
     p.x += uMouse.x * (0.6 + p.z * 0.04);
     p.y += uMouse.y * (0.4 + p.z * 0.03);
 
+    // Expanding shockwave ring from the origin (hero-name easter egg)
+    float age = uTime - uBurstTime;
+    float ring = exp(-abs(length(position) - age * 10.0) * 0.5) * exp(-age * 1.2);
+    p += normalize(position + 0.001) * ring * 2.4 * step(0.0, age);
+
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = aScale * (26.0 / -mv.z) * (1.0 + uDrift * 0.6);
+    gl_PointSize = aScale * (26.0 / -mv.z) * (1.0 + uDrift * 0.6 + ring * 1.5);
 
     vTint = aTint;
     vFade = smoothstep(28.0, 6.0, -mv.z);
@@ -39,6 +51,7 @@ const vertexShader = /* glsl */ `
 const fragmentShader = /* glsl */ `
   uniform vec3 uBlue;
   uniform vec3 uInk;
+  uniform float uScroll;
   varying float vTint;
   varying float vFade;
 
@@ -46,7 +59,9 @@ const fragmentShader = /* glsl */ `
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
     float alpha = smoothstep(0.5, 0.15, d) * vFade;
-    vec3 color = mix(uInk, uBlue, step(0.35, vTint));
+    // Warm ink up top, increasingly blue by the contact section
+    float blueShare = mix(0.5, 0.16, uScroll);
+    vec3 color = mix(uInk, uBlue, step(blueShare, vTint));
     gl_FragColor = vec4(color, alpha * mix(0.35, 0.6, vTint));
   }
 `;
@@ -93,12 +108,16 @@ export default function ParticleField({ settings }: { settings: SceneSettings })
     () => ({
       uTime: { value: 0 },
       uDrift: { value: 0 },
+      uScroll: { value: 0 },
+      uBurstTime: { value: -100 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uBlue: { value: new THREE.Color("#2563eb") },
       uInk: { value: new THREE.Color("#46382a") },
     }),
     []
   );
+
+  const burstQueued = useRef(false);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -111,6 +130,14 @@ export default function ParticleField({ settings }: { settings: SceneSettings })
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
+  useEffect(
+    () =>
+      sceneEvents.onBurst(() => {
+        burstQueued.current = true;
+      }),
+    []
+  );
+
   useFrame((state) => {
     if (settings.reducedMotion) return;
     const mat = material.current;
@@ -121,6 +148,15 @@ export default function ParticleField({ settings }: { settings: SceneSettings })
       const target = Math.min(Math.abs(scrollState.velocity) * 0.02, 1);
       drift.current += (target - drift.current) * 0.06;
       mat.uniforms.uDrift.value = drift.current;
+
+      // Page position reshapes the field (tint + spread + amplitude)
+      mat.uniforms.uScroll.value +=
+        (scrollState.progress - mat.uniforms.uScroll.value) * 0.08;
+
+      if (burstQueued.current) {
+        burstQueued.current = false;
+        mat.uniforms.uBurstTime.value = state.clock.elapsedTime;
+      }
 
       smoothedMouse.current.lerp(mouse.current, 0.04);
       mat.uniforms.uMouse.value.copy(smoothedMouse.current);

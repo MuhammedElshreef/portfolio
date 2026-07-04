@@ -48,11 +48,11 @@ export default function Preloader() {
         if (t < 1) {
           rafId = requestAnimationFrame(tick);
         } else {
-          // Hold 100 for a beat before the wipe
+          // Let the hero start under the panel, then wipe — one continuous motion
           timeoutId = window.setTimeout(() => {
-            setVisible(false);
             loaderState.finish();
-          }, 450);
+            timeoutId = window.setTimeout(() => setVisible(false), 250);
+          }, 300);
         }
       };
       rafId = requestAnimationFrame(tick);

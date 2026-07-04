@@ -1,19 +1,21 @@
 import { experience } from "@/lib/content";
 import Reveal from "../ui/Reveal";
 import SectionHeading from "../ui/SectionHeading";
+import { TimelineDot, TimelineLine } from "../ui/Timeline";
 
 export default function Experience() {
   return (
     <section id="experience" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-28 sm:px-10">
       <SectionHeading index={experience.index} title={experience.title} />
-      <ol className="relative space-y-14 border-l border-hairline pl-8 sm:pl-12">
+      <ol className="relative space-y-14 pl-8 sm:pl-12">
+        <TimelineLine />
         {experience.items.map((item, i) => (
           <li key={item.company} className="relative">
+            <TimelineDot
+              color={item.color}
+              className="absolute -left-[37px] top-2 sm:-left-[53px]"
+            />
             <Reveal delay={i * 0.08}>
-              <span
-                className="absolute -left-[37px] top-2 block h-2.5 w-2.5 rounded-full sm:-left-[53px]"
-                style={{ backgroundColor: item.color }}
-              />
               <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">{item.date}</p>
               <h3 className="mt-2 text-2xl font-semibold text-ink">
                 {item.role}{" "}

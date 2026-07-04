@@ -14,8 +14,22 @@ export default function ProjectCard({ project }: { project: Project }) {
     const el = card.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    el.style.setProperty("--gx", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--gy", `${e.clientY - rect.top}px`);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    el.style.setProperty("--gx", `${x}px`);
+    el.style.setProperty("--gy", `${y}px`);
+    // Same pointer drives a gentle perspective tilt (mouse only)
+    if (e.pointerType === "mouse") {
+      el.style.setProperty("--ry", `${(x / rect.width - 0.5) * 5}deg`);
+      el.style.setProperty("--rx", `${(0.5 - y / rect.height) * 5}deg`);
+    }
+  };
+
+  const onPointerLeave = () => {
+    const el = card.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
   };
 
   // The whole card opens the primary link — unless an inner link was clicked
@@ -29,8 +43,10 @@ export default function ProjectCard({ project }: { project: Project }) {
     <article
       ref={card}
       onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
       onClick={onClick}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-hairline bg-paper-raised/60 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-blue/30 hover:shadow-[0_24px_48px_-20px_var(--card-shadow)] ${
+      data-cursor={primaryLink ? "view" : undefined}
+      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-hairline bg-paper-raised/60 transition-all duration-500 ease-out [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))_translateY(var(--lift,0px))] hover:[--lift:-6px] hover:border-blue/30 hover:shadow-[0_24px_48px_-20px_var(--card-shadow)] ${
         primaryLink ? "cursor-pointer" : ""
       }`}
     >

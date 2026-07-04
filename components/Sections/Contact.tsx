@@ -1,4 +1,6 @@
 import { contact } from "@/lib/content";
+import LocalTime from "../ui/LocalTime";
+import Magnetic from "../ui/Magnetic";
 import Reveal from "../ui/Reveal";
 import SectionHeading from "../ui/SectionHeading";
 
@@ -17,32 +19,38 @@ export default function Contact() {
       </Reveal>
       <Reveal delay={0.2}>
         <div className="mt-10 flex flex-wrap items-center gap-8">
-          <a
-            href={`mailto:${contact.email}`}
-            className="rounded-full bg-blue px-8 py-4 font-mono text-sm text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-bright hover:shadow-[0_12px_28px_-10px_rgba(37,99,235,0.6)]"
-          >
-            {contact.email}
-          </a>
-          <a
-            href={contact.cv.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-sm uppercase tracking-widest text-ink underline decoration-hairline underline-offset-8 transition-colors hover:text-blue hover:decoration-blue"
-          >
-            {contact.cv.title} ↗
-          </a>
-          {contact.socials.map((social) => (
+          <Magnetic>
             <a
-              key={social.url}
-              href={social.url}
+              href={`mailto:${contact.email}`}
+              className="inline-block rounded-full bg-blue px-8 py-4 font-mono text-sm text-paper transition-all duration-300 hover:bg-blue-bright hover:shadow-[0_12px_28px_-10px_rgba(37,99,235,0.6)]"
+            >
+              {contact.email}
+            </a>
+          </Magnetic>
+          <Magnetic strength={0.2}>
+            <a
+              href={contact.cv.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-sm uppercase tracking-widest text-ink underline decoration-hairline underline-offset-8 transition-colors hover:text-blue hover:decoration-blue"
+              className="link-draw-rest pb-1.5 font-mono text-sm uppercase tracking-widest text-ink transition-colors hover:text-blue"
             >
-              {social.title} ↗
+              {contact.cv.title} ↗
             </a>
+          </Magnetic>
+          {contact.socials.map((social) => (
+            <Magnetic key={social.url} strength={0.2}>
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-draw-rest pb-1.5 font-mono text-sm uppercase tracking-widest text-ink transition-colors hover:text-blue"
+              >
+                {social.title} ↗
+              </a>
+            </Magnetic>
           ))}
         </div>
+        <LocalTime />
       </Reveal>
       <footer className="mt-28 flex flex-wrap items-center justify-between gap-4 border-t border-hairline pt-6">
         <p className="font-mono text-xs text-ink-muted">
