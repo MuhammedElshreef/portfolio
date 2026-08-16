@@ -22,7 +22,7 @@ export default function Contact() {
           <Magnetic>
             <a
               href={`mailto:${contact.email}`}
-              className="inline-block rounded-full bg-blue px-8 py-4 font-mono text-sm text-paper transition-all duration-300 hover:bg-blue-bright hover:shadow-[0_12px_28px_-10px_rgba(37,99,235,0.6)]"
+              className="inline-block rounded-full bg-blue px-8 py-4 font-mono text-sm text-cream transition-all duration-300 hover:bg-blue-bright hover:shadow-[0_12px_28px_-10px_rgba(37,99,235,0.6)]"
             >
               {contact.email}
             </a>

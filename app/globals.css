@@ -9,6 +9,20 @@
   --blue-bright: #3b82f6;
   --hairline: rgba(70, 56, 42, 0.14);
   --card-shadow: rgba(70, 56, 42, 0.35);
+  /* Stays cream in both themes — for text sitting on solid blue */
+  --cream: #f5f1e8;
+}
+
+/* Dark mode: dim midnight blue-ink — softened night-sky navy, gentle contrast */
+[data-theme="dark"] {
+  --paper: #151c26;
+  --paper-raised: #1e2836;
+  --ink: #e6e0d4;
+  --ink-muted: #8e99a8;
+  --blue: #4d8dff;
+  --blue-bright: #6ea3ff;
+  --hairline: rgba(214, 224, 238, 0.14);
+  --card-shadow: rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
@@ -19,6 +33,7 @@
   --color-blue: var(--blue);
   --color-blue-bright: var(--blue-bright);
   --color-hairline: var(--hairline);
+  --color-cream: var(--cream);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-playfair);
@@ -50,6 +65,43 @@ body {
   pointer-events: none;
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Light noise reads better on ink-soaked paper */
+[data-theme="dark"] .grain::after {
+  filter: invert(1);
+}
+
+/* Project line-art follows the active palette (stroke property beats the attribute) */
+.project-art [stroke="#2563eb"] {
+  stroke: var(--blue);
+}
+.project-art [stroke="#8a7a6a"] {
+  stroke: var(--ink-muted);
+}
+
+/* ---- Ink spill theme transition (View Transitions API) ----
+   The toggle animates clip-path on these pseudo-elements from the click
+   point; default cross-fade is disabled so the ink edge stays crisp. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+/* Going back to light the OLD (dark) view sits on top and drains away */
+html.ink-drain::view-transition-old(root) {
+  z-index: 1;
+}
+
+/* ---- Code-boolean toggle ----
+   The nav reads like a terminal line: dark:false_ ↔ dark:true_. The value
+   lives in CSS content so theme state never touches markup. */
+.theme-toggle .val::after {
+  content: "false";
+}
+[data-theme="dark"] .theme-toggle .val::after {
+  content: "true";
+  color: var(--blue);
 }
 
 .text-display {

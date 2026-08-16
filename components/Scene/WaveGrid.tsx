@@ -3,7 +3,10 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { themeState } from "../themeState";
 import type { SceneSettings } from "./SceneCanvas";
+
+const GRID_BLUE = { light: "#2563eb", dark: "#4d8dff" } as const;
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -73,6 +76,12 @@ export default function WaveGrid({ settings }: { settings: SceneSettings }) {
     }),
     []
   );
+
+  useEffect(() => {
+    const apply = () => uniforms.uColor.value.set(GRID_BLUE[themeState.get()]);
+    apply();
+    return themeState.subscribe(apply);
+  }, [uniforms]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {

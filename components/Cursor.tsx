@@ -3,14 +3,26 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useMediaQuery } from "./Scene/useMediaQuery";
+import { useTheme, type Theme } from "./themeState";
 
 type Mode = "default" | "link" | "view";
 
-const ring: Record<Mode, { size: number; backgroundColor: string; borderColor: string }> = {
-  default: { size: 32, backgroundColor: "rgba(37, 99, 235, 0)", borderColor: "rgba(70, 56, 42, 0.35)" },
-  link: { size: 48, backgroundColor: "rgba(37, 99, 235, 0.08)", borderColor: "rgba(37, 99, 235, 0.65)" },
-  view: { size: 76, backgroundColor: "rgba(37, 99, 235, 0.95)", borderColor: "rgba(37, 99, 235, 0)" },
+type RingStyle = { size: number; backgroundColor: string; borderColor: string };
+
+// blue / resting-ring rgb per theme (framer-motion animates rgba strings)
+const inkRgb: Record<Theme, { blue: string; rest: string }> = {
+  light: { blue: "37, 99, 235", rest: "70, 56, 42" },
+  dark: { blue: "77, 141, 255", rest: "214, 224, 238" },
 };
+
+function ringStyles(theme: Theme): Record<Mode, RingStyle> {
+  const { blue, rest } = inkRgb[theme];
+  return {
+    default: { size: 32, backgroundColor: `rgba(${blue}, 0)`, borderColor: `rgba(${rest}, 0.35)` },
+    link: { size: 48, backgroundColor: `rgba(${blue}, 0.08)`, borderColor: `rgba(${blue}, 0.65)` },
+    view: { size: 76, backgroundColor: `rgba(${blue}, 0.95)`, borderColor: `rgba(${blue}, 0)` },
+  };
+}
 
 // Ink dot + trailing ring. Fine pointers only; the ring becomes a "View ↗"
 // pill over project cards (anything carrying data-cursor="view").
@@ -21,6 +33,7 @@ export default function Cursor() {
 
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<Mode>("default");
+  const ring = ringStyles(useTheme());
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
@@ -71,7 +84,7 @@ export default function Cursor() {
           transition={{ type: "spring", stiffness: 350, damping: 26 }}
         >
           <motion.span
-            className="whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-paper"
+            className="whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-cream"
             animate={{ opacity: mode === "view" ? 1 : 0 }}
             transition={{ duration: 0.2 }}
           >

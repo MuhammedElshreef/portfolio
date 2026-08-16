@@ -5,24 +5,29 @@
 
 ## Concept
 
-Light mode is ink on paper; dark mode is paper soaked in ink. Clicking an
-inkwell icon in the nav "spills" darkness from the click point — a circular
-ink-wash floods the viewport using the View Transitions API. Toggling back
-drains the ink toward the inkwell. The dark palette stays warm (ink-black,
-cream text) so the site keeps its paper/ink identity.
+Light mode is ink on paper; dark mode is dim midnight blue-ink — a
+softened night-sky navy (dark but not black, in the spirit of Twitter's
+"Dim") with gently warm cream text. Clicking a sun/moon toggle in the nav
+"spills" darkness from the click point — a circular ink-wash floods the
+viewport using the View Transitions API. Toggling back drains the dark
+view toward the toggle.
+
+*(Revised 2026-08-16 three times on user feedback: warm brown-black +
+inkwell → midnight blue-ink + sun ↔ moon morph → true black studio with
+glow → dim midnight blue-ink, chosen from a ten-theme sample gallery.)*
 
 ## Palette
 
 | Token            | Light                  | Dark                        |
 | ---------------- | ---------------------- | --------------------------- |
-| `--paper`        | `#f5f1e8`              | `#161210`                   |
-| `--paper-raised` | `#ede7da`              | `#211b16`                   |
-| `--ink`          | `#46382a`              | `#ece5d8`                   |
-| `--ink-muted`    | `#8a7a6a`              | `#9a8b7a`                   |
+| `--paper`        | `#f5f1e8`              | `#151c26`                   |
+| `--paper-raised` | `#ede7da`              | `#1e2836`                   |
+| `--ink`          | `#46382a`              | `#e6e0d4`                   |
+| `--ink-muted`    | `#8a7a6a`              | `#8e99a8`                   |
 | `--blue`         | `#2563eb`              | `#4d8dff`                   |
 | `--blue-bright`  | `#3b82f6`              | `#6ea3ff`                   |
-| `--hairline`     | `rgba(70,56,42,0.14)`  | `rgba(236,229,216,0.14)`    |
-| `--card-shadow`  | `rgba(70,56,42,0.35)`  | `rgba(0,0,0,0.55)`          |
+| `--hairline`     | `rgba(70,56,42,0.14)`  | `rgba(214,224,238,0.14)`    |
+| `--card-shadow`  | `rgba(70,56,42,0.35)`  | `rgba(0,0,0,0.45)`          |
 
 ## Architecture
 
@@ -38,9 +43,14 @@ cream text) so the site keeps its paper/ink identity.
 - **Theme store:** `components/themeState.ts`, a module-level
   subscribe/notify store following the existing `loaderState.ts` pattern.
   Exposes current theme + `toggleTheme(originX, originY)` + `subscribe()`.
-- **Toggle component:** `components/ui/ThemeToggle.tsx` — an inkwell SVG
-  (line-art style matching the site's self-drawing SVG language) with an
-  ink drop that tips on hover. Rendered in the desktop nav and mobile menu.
+- **Toggle component:** `components/ui/ThemeToggle.tsx` — a code-boolean
+  in mono type: `> dark:false_` ↔ `> dark:true_`, the value turning blue
+  when true, with a blinking caret reusing the typing logo's animation and
+  a blue prompt chevron (the clickability cue) that nudges forward on
+  hover. The value is CSS `::after` content keyed off `[data-theme]`, so
+  server and client markup always match. Rendered in the nav on all
+  breakpoints. *(Fourth icon revision: inkwell → sun ↔ moon morph →
+  half-ink disc → code boolean, picked from IT-themed sample pages.)*
 - **Ink spill animation:** on click, `document.startViewTransition()` with a
   custom `::view-transition-new(root)` animation: `clip-path: circle()`
   expanding from the click coordinates to cover the viewport (~700ms,

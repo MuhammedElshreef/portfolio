@@ -23,16 +23,12 @@ export default function About() {
             <div className="relative aspect-4/5 overflow-hidden rounded-lg border border-hairline bg-paper-raised transition-transform duration-500 ease-out group-hover:-translate-x-1.5 group-hover:-translate-y-1.5">
               {hasPhoto ? (
                 <>
-                  {/* Ink-and-blue duotone at rest; true color on hover */}
+                  {/* Grayscale at rest; true color on hover */}
                   <Image
                     src="/me.jpg"
                     alt={about.photoAlt}
                     fill
                     className="object-cover grayscale transition-[transform,filter] duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-blue/70 mix-blend-color transition-opacity duration-700 group-hover:opacity-0"
                   />
                 </>
               ) : (

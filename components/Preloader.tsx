@@ -73,7 +73,7 @@ export default function Preloader() {
           transition={{ duration: instant ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.p
-            className="font-mono text-sm uppercase tracking-widest text-paper sm:text-base"
+            className="font-mono text-sm uppercase tracking-widest text-cream sm:text-base"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.6 }}
@@ -84,20 +84,20 @@ export default function Preloader() {
           <div className="flex items-end justify-between gap-6">
             <motion.p
               key={statusFor(count)}
-              className="mb-4 font-mono text-sm uppercase tracking-widest text-paper/70 sm:text-base"
+              className="mb-4 font-mono text-sm uppercase tracking-widest text-cream/70 sm:text-base"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
             >
               {statusFor(count)}
             </motion.p>
-            <span className="text-display text-[clamp(6rem,20vw,14rem)] leading-none text-paper tabular-nums">
+            <span className="text-display text-[clamp(6rem,20vw,14rem)] leading-none text-cream tabular-nums">
               {count}
             </span>
           </div>
 
           <div
-            className="absolute bottom-0 left-0 h-1 bg-paper transition-[width] duration-100 ease-linear"
+            className="absolute bottom-0 left-0 h-1 bg-cream transition-[width] duration-100 ease-linear"
             style={{ width: `${count}%` }}
           />
         </motion.div>

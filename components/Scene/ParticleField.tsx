@@ -4,8 +4,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { scrollState } from "../SmoothScroll";
+import { themeState } from "../themeState";
 import { sceneEvents } from "./sceneEvents";
 import type { SceneSettings } from "./SceneCanvas";
+
+const FIELD_COLORS = {
+  light: { blue: "#2563eb", ink: "#46382a" },
+  dark: { blue: "#4d8dff", ink: "#e6e0d4" },
+} as const;
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -118,6 +124,16 @@ export default function ParticleField({ settings }: { settings: SceneSettings })
   );
 
   const burstQueued = useRef(false);
+
+  useEffect(() => {
+    const apply = () => {
+      const { blue, ink } = FIELD_COLORS[themeState.get()];
+      uniforms.uBlue.value.set(blue);
+      uniforms.uInk.value.set(ink);
+    };
+    apply();
+    return themeState.subscribe(apply);
+  }, [uniforms]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {

@@ -71,8 +71,15 @@ const personJsonLd = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5f1e8",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f1e8" },
+    { media: "(prefers-color-scheme: dark)", color: "#151c26" },
+  ],
 };
+
+// Runs while the <head> parses, before first paint: saved theme wins,
+// otherwise follow the system. Light mode is the attribute-less default.
+const themeBootScript = `(function(){try{var t=localStorage.getItem("theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";if(t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}})()`;
 
 export default function RootLayout({
   children,
@@ -82,8 +89,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body className="grain min-h-full flex flex-col">
         <script
           type="application/ld+json"

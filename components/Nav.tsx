@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { contact, nav } from "@/lib/content";
 import { scrollControl } from "./SmoothScroll";
+import ThemeToggle from "./ui/ThemeToggle";
 
 const LOGO = "m.alsayed";
 
@@ -84,11 +85,11 @@ function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="flex items-center justify-between">
-            <p className="font-mono text-sm uppercase tracking-widest text-paper/70">Menu</p>
+            <p className="font-mono text-sm uppercase tracking-widest text-cream/70">Menu</p>
             <button
               onClick={close}
               aria-label="Close menu"
-              className="flex h-11 w-11 items-center justify-center font-mono text-2xl text-paper"
+              className="flex h-11 w-11 items-center justify-center font-mono text-2xl text-cream"
             >
               ×
             </button>
@@ -107,9 +108,9 @@ function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
                   custom={i}
                   href={link.href}
                   onClick={onLinkClick}
-                  className="text-display flex items-baseline gap-4 py-1 text-5xl text-paper active:text-paper/70"
+                  className="text-display flex items-baseline gap-4 py-1 text-5xl text-cream active:text-cream/70"
                 >
-                  <span className="font-mono text-sm font-normal text-paper/60">
+                  <span className="font-mono text-sm font-normal text-cream/60">
                     0{i + 1}
                   </span>
                   {link.title}
@@ -119,7 +120,7 @@ function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
           </motion.nav>
 
           <motion.div
-            className="flex items-center justify-between border-t border-paper/20 pt-5"
+            className="flex items-center justify-between border-t border-cream/20 pt-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { delay: 0.65, duration: 0.5 } }}
             exit={{ opacity: 0 }}
@@ -128,13 +129,13 @@ function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
               href={contact.cv.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-xs uppercase tracking-widest text-paper"
+              className="font-mono text-xs uppercase tracking-widest text-cream"
             >
               CV ↗
             </a>
             <a
               href={`mailto:${contact.email}`}
-              className="font-mono text-xs uppercase tracking-widest text-paper"
+              className="font-mono text-xs uppercase tracking-widest text-cream"
             >
               Email ↗
             </a>
@@ -144,7 +145,7 @@ function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-xs uppercase tracking-widest text-paper"
+                className="font-mono text-xs uppercase tracking-widest text-cream"
               >
                 {social.title} ↗
               </a>
@@ -178,37 +179,40 @@ export default function Nav() {
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <TypingLogo />
-          <ul className="hidden items-center gap-7 sm:flex">
-            {nav.links.map((link) => (
-              <li key={link.href}>
+          <div className="flex items-center gap-2 sm:gap-5">
+            <ul className="hidden items-center gap-7 sm:flex">
+              {nav.links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="link-draw pb-0.5 font-mono text-xs uppercase tracking-widest text-ink-muted transition-colors hover:text-blue"
+                  >
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+              <li>
                 <a
-                  href={link.href}
-                  className="link-draw pb-0.5 font-mono text-xs uppercase tracking-widest text-ink-muted transition-colors hover:text-blue"
+                  href={contact.cv.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-draw pb-0.5 font-mono text-xs uppercase tracking-widest text-blue"
                 >
-                  {link.title}
+                  CV ↗
                 </a>
               </li>
-            ))}
-            <li>
-              <a
-                href={contact.cv.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-draw pb-0.5 font-mono text-xs uppercase tracking-widest text-blue"
-              >
-                CV ↗
-              </a>
-            </li>
-          </ul>
-          <button
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={menuOpen}
-            className="group flex h-11 w-11 flex-col items-end justify-center gap-1.5 sm:hidden"
-          >
-            <span className="block h-px w-6 bg-ink transition-all duration-300 group-active:w-4" />
-            <span className="block h-px w-4 bg-ink transition-all duration-300 group-active:w-6" />
-          </button>
+            </ul>
+            <ThemeToggle />
+            <button
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="group flex h-11 w-11 flex-col items-end justify-center gap-1.5 sm:hidden"
+            >
+              <span className="block h-px w-6 bg-ink transition-all duration-300 group-active:w-4" />
+              <span className="block h-px w-4 bg-ink transition-all duration-300 group-active:w-6" />
+            </button>
+          </div>
         </nav>
       </header>
       <MobileMenu open={menuOpen} close={() => setMenuOpen(false)} />
