@@ -70,16 +70,16 @@ const personJsonLd = {
   sameAs: contact.socials.map((social) => social.url),
 };
 
+// Light is the default regardless of OS preference, so the browser chrome
+// matches the light paper; the toggle updates this at runtime for dark.
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f1e8" },
-    { media: "(prefers-color-scheme: dark)", color: "#151c26" },
-  ],
+  themeColor: "#f5f1e8",
 };
 
-// Runs while the <head> parses, before first paint: saved theme wins,
-// otherwise follow the system. Light mode is the attribute-less default.
-const themeBootScript = `(function(){try{var t=localStorage.getItem("theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";if(t==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}})()`;
+// Runs while the <head> parses, before first paint: only a saved "dark"
+// choice switches the theme. Light is the default for every first visit,
+// regardless of the OS preference.
+const themeBootScript = `(function(){try{if(localStorage.getItem("theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#151c26")}}catch(e){}})()`;
 
 export default function RootLayout({
   children,

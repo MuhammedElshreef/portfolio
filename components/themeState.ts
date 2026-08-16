@@ -18,6 +18,10 @@ export const themeState = {
   get: read,
   set(theme: Theme) {
     document.documentElement.dataset.theme = theme;
+    // Keep the mobile browser chrome in step with the paper color
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#151c26" : "#f5f1e8");
     try {
       localStorage.setItem("theme", theme);
     } catch {

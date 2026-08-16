@@ -36,10 +36,12 @@ glow → dim midnight blue-ink, chosen from a ten-theme sample gallery.)*
   Tailwind colors already flow through these variables via `@theme inline`,
   so components restyle automatically.
 - **No-flash boot:** a tiny inline script in the `<head>` (in `layout.tsx`)
-  reads `localStorage.theme`, falling back to `prefers-color-scheme`, and
-  sets the attribute before first paint.
-- **Persistence:** explicit toggle click writes `localStorage.theme`
-  (`"light"` / `"dark"`). First visit follows the system preference.
+  reads `localStorage.theme`; only a saved `"dark"` sets the attribute (and
+  the `theme-color` meta) before first paint.
+- **Persistence / default:** explicit toggle click writes
+  `localStorage.theme` (`"light"` / `"dark"`). **Light is the default for
+  every first visit regardless of OS preference** (changed 2026-08-16 from
+  follow-system on user request).
 - **Theme store:** `components/themeState.ts`, a module-level
   subscribe/notify store following the existing `loaderState.ts` pattern.
   Exposes current theme + `toggleTheme(originX, originY)` + `subscribe()`.
@@ -61,8 +63,8 @@ glow → dim midnight blue-ink, chosen from a ten-theme sample gallery.)*
   (`uInk` uniform) subscribe to the theme store and update their uniforms.
 - **Cursor:** `Cursor.tsx` ring/dot rgba colors become theme-dependent via
   the store.
-- **Browser chrome:** `viewport.themeColor` uses media-query entries for
-  light/dark.
+- **Browser chrome:** `viewport.themeColor` is the light paper color; the
+  boot script and `themeState.set` rewrite the meta at runtime for dark.
 
 ## Error handling
 
