@@ -3,13 +3,30 @@ export type ProjectLink = {
   url: string;
 };
 
+// Generated canvas cover motif for a project card in the ring
+export type CoverMotif =
+  | "rings"
+  | "arch"
+  | "bars"
+  | "circuit"
+  | "ecg"
+  | "isobar"
+  | "hex"
+  | "stars";
+
 export type Project = {
   slug: string;
   title: string;
   description: string;
   techs: string[];
   links: ProjectLink[];
+  cover?: CoverMotif;
 };
+
+// A paragraph with optional bold runs
+export type RichText = (string | { strong: string })[];
+
+export type SkillGroupKey = "fe" | "be" | "tl";
 
 export type ExperienceItem = {
   role: string;
@@ -17,6 +34,9 @@ export type ExperienceItem = {
   companyUrl?: string;
   color: string;
   date: string;
+  from: string;
+  to: string;
+  current?: boolean;
   description?: string;
 };
 
@@ -26,11 +46,21 @@ export const seo = {
   description:
     "Portfolio of Muhammed Alsayed (محمد السيد), a full-stack web developer in Tripoli, Libya building production-grade web platforms: Laravel and Filament back-ends, Angular, Vue, and React front-ends.",
   arabicName: "محمد السيد",
+  role: "Full-Stack Web Developer",
 };
 
 export const hero = {
   name: "Muhammed Alsayed",
+  titleLines: ["Muhammed", "Alsayed"],
   role: ["Full Stack", "Web Developer"],
+  sub: "Full-stack web developer in Tripoli, Libya. Laravel back-ends, Angular, Vue and React front-ends.",
+  primaryCta: { title: "See the work", href: "#work" },
+  secondaryCta: { title: "Email me", href: "#contact" },
+  hint: {
+    pointer: "Move to draw constellations. Click to scatter.",
+    touch: "Tap the sky to scatter the stars",
+  },
+  sectionLabel: "Introduction",
   statement:
     "I build production-grade web platforms, from Laravel back-ends to Angular, Vue, and React front-ends.",
 };
@@ -38,11 +68,17 @@ export const hero = {
 export const about = {
   index: "01",
   title: "About",
+  heading: "Hi, I'm Muhammed",
   paragraphs: [
-    "I'm a Full-Stack Web Developer with a passion for creating beautiful and functional web applications. I enjoy learning new technologies, building things, and helping people.",
-    "I work across the whole stack, designing back-end architectures and crafting front-end interfaces, to ship complete products end to end. From the data model to the last pixel.",
-    "I'm always exploring new tools and ideas. I learn fast, share what I learn, and enjoy collaborating with others to build things that matter.",
-  ],
+    [
+      "I'm a ",
+      { strong: "Full-Stack Web Developer" },
+      " with a passion for creating beautiful and functional web applications. I enjoy learning new technologies, building things, and helping people.",
+    ],
+    [
+      "I'm always exploring new tools and ideas. I learn fast, share what I learn, and enjoy collaborating with others to build things that matter.",
+    ],
+  ] satisfies RichText[],
   photoAlt: "Portrait of Muhammed Alsayed",
   initials: "MA",
 };
@@ -56,6 +92,9 @@ export const experience = {
       company: "Qader co",
       color: "#37BC69",
       date: "May 2026 - Present",
+      from: "May 2026",
+      to: "Present",
+      current: true,
       description: "Part-time front-end development.",
     },
     {
@@ -64,6 +103,8 @@ export const experience = {
       companyUrl: "https://libyana.ly",
       color: "#951B81",
       date: "Jul 2025 - Dec 2025",
+      from: "Jul 2025",
+      to: "Dec 2025",
       description:
         "Building Libyana Hub, the digital platform of Libya's leading mobile network operator. Full-time, via Tadamon.",
     },
@@ -73,6 +114,8 @@ export const experience = {
       companyUrl: "https://mataa.app",
       color: "#F9A61A",
       date: "Jan 2024 - Apr 2024",
+      from: "Jan 2024",
+      to: "Apr 2024",
       description:
         "Mataa is Libya's largest shopping app, bringing original products from international brands to customers across all Libyan cities.",
     },
@@ -81,16 +124,31 @@ export const experience = {
     degree: "BSc in Software Engineering",
     institution: "University of Tripoli",
     date: "2023 - Present",
+    from: "2023",
+    to: "Present",
   },
+  currentBadge: "Now",
 };
 
 export const projects = {
   index: "03",
   title: "Projects",
   tagline: "Building interfaces, bringing ideas to life.",
+  // The ring shows these, in this order
+  featured: [
+    "libyanahub",
+    "libya-roots",
+    "orders",
+    "kbtech",
+    "libyanahub-collab",
+    "weather",
+    "elzwetina",
+    "zad-almuslim",
+  ],
   items: [
     {
       slug: "libyanahub",
+      cover: "rings",
       title: "LibyanaHub Platform",
       description:
         "A comprehensive e-learning and fitness coaching platform for the Libyan market. Course enrollment, tiered coach subscriptions, an admin dashboard, and full Arabic/English bilingual support with RTL layout.",
@@ -99,6 +157,7 @@ export const projects = {
     },
     {
       slug: "libyanahub-collab",
+      cover: "ecg",
       title: "LibyanaHub Collab",
       description:
         "A collaboration between Libyana and medical students to track and monitor patient health: record management, medical history tracking, and streamlined communication between healthcare providers.",
@@ -114,6 +173,7 @@ export const projects = {
     },
     {
       slug: "orders",
+      cover: "bars",
       title: "Orders Management System",
       description:
         "A full-featured order and invoice management system covering the complete lifecycle, from customers and products to PDF invoices, payment tracking, and real-time financial analytics.",
@@ -122,6 +182,7 @@ export const projects = {
     },
     {
       slug: "elzwetina",
+      cover: "hex",
       title: "Elzwetina Group",
       description:
         "Corporate website for Libya's leading industrial and safety solutions provider: product showcase, brand partnerships, client portfolio, and a Filament-powered admin panel.",
@@ -130,6 +191,7 @@ export const projects = {
     },
     {
       slug: "kbtech",
+      cover: "circuit",
       title: "Alkhidmat Albarmajia",
       description:
         "A modern, responsive website for a Libyan tech services company, built as a freelancer with Astro and a custom Vue component.",
@@ -138,6 +200,7 @@ export const projects = {
     },
     {
       slug: "weather",
+      cover: "isobar",
       title: "Weather Now",
       description:
         "Real-time weather with a clean, responsive interface: worldwide location search, current conditions, 7-day forecasts, and hourly temperature trends.",
@@ -151,6 +214,7 @@ export const projects = {
     },
     {
       slug: "libya-roots",
+      cover: "arch",
       title: "Libya Roots",
       description:
         "A tourism platform showcasing Libya's cultural and historical landmarks: categorized destinations, interactive maps, and saved favorites for trip planning.",
@@ -169,6 +233,7 @@ export const projects = {
     },
     {
       slug: "zad-almuslim",
+      cover: "stars",
       title: "Zad Al-muslim",
       description:
         "An Islamic resource platform offering Quran recitations, radio stations, and educational lessons through a friendly, accessible interface.",
@@ -218,8 +283,33 @@ export const projects = {
 export const skills = {
   index: "04",
   title: "Skills",
+  legendLabel: "Legend",
+  listLabel: "Skills list",
+  // Order of the tags around the sphere, so the groups interleave
+  sphereOrder: [
+    "HTML",
+    "Laravel",
+    "Vue.js",
+    "Git",
+    "TypeScript",
+    "PHP",
+    "Angular",
+    "MySQL",
+    "Tailwind CSS",
+    "Filament",
+    "React",
+    "GitHub",
+    "Nuxt.js",
+    "Livewire",
+    "CSS",
+    "Node.js",
+    "Astro",
+    "MongoDB",
+    "JavaScript",
+  ],
   groups: [
     {
+      key: "fe" as SkillGroupKey,
       name: "Front-end",
       items: [
         "HTML",
@@ -235,6 +325,7 @@ export const skills = {
       ],
     },
     {
+      key: "be" as SkillGroupKey,
       name: "Back-end",
       items: [
         "PHP",
@@ -247,6 +338,7 @@ export const skills = {
       ],
     },
     {
+      key: "tl" as SkillGroupKey,
       name: "Tools",
       items: ["Git", "GitHub"],
     },
@@ -260,8 +352,10 @@ export const contact = {
   subheading:
     "Have a project in mind, a role to fill, or just want to talk web? My inbox is open.",
   email: "muhammedelshreef50@gmail.com",
-  cv: { title: "View CV", url: "/Muhammed-Alsayed-CV.pdf" },
+  cv: { title: "CV", url: "/Muhammed-Alsayed-CV.pdf" },
   socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
+  marquee: { en: "Let's build something", ar: "لنبنِ شيئًا معًا" },
+  send: "Send email",
 };
 
 export const marquee = [
@@ -278,11 +372,47 @@ export const marquee = [
 
 export const nav = {
   name: "Muhammed Alsayed",
+  brandLabel: "Muhammed Alsayed, back to top",
+  sectionsLabel: "Sections",
+  cta: { title: "Email me", href: "#contact" },
   links: [
+    { title: "Work", href: "#work" },
+    { title: "Skills", href: "#skills" },
     { title: "About", href: "#about" },
     { title: "Experience", href: "#experience" },
-    { title: "Projects", href: "#projects" },
-    { title: "Skills", href: "#skills" },
     { title: "Contact", href: "#contact" },
   ],
+};
+
+// The calligraphy intro writes the Arabic name in
+export const intro = {
+  name: seo.arabicName,
+};
+
+// Big statement over the particle code glyph
+export const statement = {
+  sectionLabel: "What I do",
+  text: "I work across the whole stack, designing back-end architectures and crafting front-end interfaces, to ship complete products end to end.",
+  line: "From the data model to the last pixel.",
+};
+
+// Pinned 3D project ring and its detail view
+export const work = {
+  title: "Selected work",
+  note: `${projects.featured.length} projects. Drag the ring or pick a name.`,
+  ringLabel:
+    "Project ring. Use the arrow keys to turn it and Enter to open the front project.",
+  prevLabel: "Previous project",
+  nextLabel: "Next project",
+  indexLabel: "Projects",
+  techSeparator: "  /  ",
+  bubble: "View",
+  close: "Close",
+  previewSuffix: "preview",
+  noLink: "Private client project. No public link yet.",
+};
+
+export const footer = {
+  copyright: "© 2026 Muhammed Alsayed",
+  backToTop: "Back to top",
 };

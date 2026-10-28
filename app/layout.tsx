@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk, JetBrains_Mono, Rakkas } from "next/font/google";
 import { contact, experience, hero, seo } from "@/lib/content";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Display face; the optical-size axis is used across the headline sizes
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  axes: ["opsz"],
+});
+
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
+});
+
+// Arabic name in the logo, intro, marquee and footer
+const rakkas = Rakkas({
+  variable: "--font-rakkas",
+  weight: "400",
+  subsets: ["arabic"],
 });
 
 export const metadata: Metadata = {
@@ -50,6 +64,10 @@ export const metadata: Metadata = {
   ],
 };
 
+export const viewport: Viewport = {
+  themeColor: "#07090c",
+};
+
 // Structured data so search engines understand who this site is about
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -64,6 +82,9 @@ const personJsonLd = {
   sameAs: contact.socials.map((social) => social.url),
 };
 
+// Runs before first paint: motion styles (intro, sticky cards) only when motion is allowed
+const motionScript = `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,9 +93,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${hanken.variable} ${jetbrains.variable} ${rakkas.variable}`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionScript }} />
+      </head>
+      <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
