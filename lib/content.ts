@@ -3,24 +3,14 @@ export type ProjectLink = {
   url: string;
 };
 
-// Generated canvas cover motif for a project card in the ring
-export type CoverMotif =
-  | "rings"
-  | "arch"
-  | "bars"
-  | "circuit"
-  | "ecg"
-  | "isobar"
-  | "hex"
-  | "stars";
-
 export type Project = {
   slug: string;
   title: string;
   description: string;
   techs: string[];
   links: ProjectLink[];
-  cover?: CoverMotif;
+  /** What kind of product it is, shown on its terminal card */
+  kind?: string;
 };
 
 // A paragraph with optional bold runs
@@ -126,6 +116,7 @@ export const experience = {
     date: "2023 - Present",
     from: "2023",
     to: "Present",
+    description: "Studying software engineering alongside the work above.",
   },
   currentBadge: "Now",
 };
@@ -148,7 +139,7 @@ export const projects = {
   items: [
     {
       slug: "libyanahub",
-      cover: "rings",
+      kind: "E-learning and coaching",
       title: "LibyanaHub Platform",
       description:
         "A comprehensive e-learning and fitness coaching platform for the Libyan market. Course enrollment, tiered coach subscriptions, an admin dashboard, and full Arabic/English bilingual support with RTL layout.",
@@ -157,7 +148,7 @@ export const projects = {
     },
     {
       slug: "libyanahub-collab",
-      cover: "ecg",
+      kind: "Patient records",
       title: "LibyanaHub Collab",
       description:
         "A collaboration between Libyana and medical students to track and monitor patient health: record management, medical history tracking, and streamlined communication between healthcare providers.",
@@ -173,7 +164,7 @@ export const projects = {
     },
     {
       slug: "orders",
-      cover: "bars",
+      kind: "Orders and invoices",
       title: "Orders Management System",
       description:
         "A full-featured order and invoice management system covering the complete lifecycle, from customers and products to PDF invoices, payment tracking, and real-time financial analytics.",
@@ -182,7 +173,7 @@ export const projects = {
     },
     {
       slug: "elzwetina",
-      cover: "hex",
+      kind: "Corporate catalogue",
       title: "Elzwetina Group",
       description:
         "Corporate website for Libya's leading industrial and safety solutions provider: product showcase, brand partnerships, client portfolio, and a Filament-powered admin panel.",
@@ -191,7 +182,7 @@ export const projects = {
     },
     {
       slug: "kbtech",
-      cover: "circuit",
+      kind: "Company website",
       title: "Alkhidmat Albarmajia",
       description:
         "A modern, responsive website for a Libyan tech services company, built as a freelancer with Astro and a custom Vue component.",
@@ -200,7 +191,7 @@ export const projects = {
     },
     {
       slug: "weather",
-      cover: "isobar",
+      kind: "Weather app",
       title: "Weather Now",
       description:
         "Real-time weather with a clean, responsive interface: worldwide location search, current conditions, 7-day forecasts, and hourly temperature trends.",
@@ -214,7 +205,7 @@ export const projects = {
     },
     {
       slug: "libya-roots",
-      cover: "arch",
+      kind: "Tourism guide",
       title: "Libya Roots",
       description:
         "A tourism platform showcasing Libya's cultural and historical landmarks: categorized destinations, interactive maps, and saved favorites for trip planning.",
@@ -233,7 +224,7 @@ export const projects = {
     },
     {
       slug: "zad-almuslim",
-      cover: "stars",
+      kind: "Quran and lessons",
       title: "Zad Al-muslim",
       description:
         "An Islamic resource platform offering Quran recitations, radio stations, and educational lessons through a friendly, accessible interface.",
@@ -354,7 +345,7 @@ export const contact = {
   email: "muhammedelshreef50@gmail.com",
   cv: { title: "CV", url: "/Muhammed-Alsayed-CV.pdf" },
   socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
-  marquee: { en: "Let's build something", ar: "لنبنِ شيئًا معًا" },
+  marquee: "Let's build something",
   send: "Send email",
 };
 
@@ -384,9 +375,10 @@ export const nav = {
   ],
 };
 
-// The calligraphy intro writes the Arabic name in
+// The splash: light flows through the </>, then the brackets open on the name
 export const intro = {
-  name: seo.arabicName,
+  name: hero.name,
+  role: "Full-stack web developer",
 };
 
 // Big statement over the particle code glyph
@@ -396,19 +388,23 @@ export const statement = {
   line: "From the data model to the last pixel.",
 };
 
-// Pinned 3D project ring and its detail view
+// Horizontal projects track and its detail view
 export const work = {
   title: "Selected work",
-  note: `${projects.featured.length} projects. Drag the ring or pick a name.`,
-  ringLabel:
-    "Project ring. Use the arrow keys to turn it and Enter to open the front project.",
-  prevLabel: "Previous project",
-  nextLabel: "Next project",
-  indexLabel: "Projects",
-  techSeparator: "  /  ",
+  note: `${projects.featured.length} projects. Scroll or swipe to browse.`,
+  open: "Open",
+  // The terminal card: a prompt that opens the project, then its details as key and value lines
+  terminal: {
+    prompt: "~/projects $",
+    command: "open",
+    type: "type",
+    stack: "stack",
+    status: "status",
+    live: "live",
+    private: "private",
+  },
   bubble: "View",
   close: "Close",
-  previewSuffix: "preview",
   noLink: "Private client project. No public link yet.",
 };
 

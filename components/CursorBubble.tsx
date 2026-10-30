@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { finePointer, prefersReducedMotion, store } from "@/lib/store";
 
-/** The "View" bubble that trails the cursor over the front ring card */
+/** The "View" bubble that trails the cursor over a project card */
 export default function CursorBubble({ label }: { label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {

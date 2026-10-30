@@ -1,5 +1,3 @@
-import type Lenis from "lenis";
-
 /*
   Per-frame values shared between the client leaves. A plain module-level object,
   never React state: the scroll frame writes it, the particle sky reads it every frame.
@@ -7,7 +5,7 @@ import type Lenis from "lenis";
 export type BubbleApi = { show(): void; hide(): void; press(): void };
 
 export const store = {
-  /** Particle formation, 0 to 3: night sky, code glyph, globe, starfield */
+  /** Particle formation, 0 to 2: night sky, code glyph, globe (the globe only with the skills sphere) */
   stage: 0,
   /** Particle opacity the sky eases toward */
   alpha: 1,
@@ -15,17 +13,14 @@ export const store = {
   go: false,
   /** Bumped whenever the palette tokens are re-read */
   palV: 0,
-  workOn: false,
-  aboutOn: false,
   /** How far the skills sphere has settled into its groups, 0 to 1 */
   skillsFlat: 0,
   /** Kinetic type reacts to the pointer only after the intro */
   kineticOn: false,
   /** The intro is holding the scroll */
   introActive: false,
-  lenis: null as Lenis | null,
-  /** Generated cover data URLs, by ring index */
-  covers: [] as string[],
+  /** Set by the particle sky while its loop sleeps; wakes it when the page needs it again */
+  skyWake: null as (() => void) | null,
   detailOpen: false,
   openDetail: null as ((i: number) => void) | null,
   bubble: null as BubbleApi | null,
@@ -33,6 +28,13 @@ export const store = {
 
 export const prefersReducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Phones, narrow windows and touch screens get the flat skills list instead of the sphere */
+export const COMPACT_SKILLS_MQ = "(max-width: 760px), (pointer: coarse)";
+export const compactSkills = () => matchMedia(COMPACT_SKILLS_MQ).matches;
+
+/** Holds the page still (intro). Native scroll, so this is plain overflow on <html> */
+export const lockScroll = (on: boolean) => document.documentElement.classList.toggle("scroll-lock", on);
 
 export const finePointer = () =>
   matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -54,40 +56,4 @@ export const fontsReady = (ms = 2200) =>
 export function fontFamily(variable: string, fallback: string) {
   const v = getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
   return v || fallback;
-}
-
-export type RGB = [number, number, number];
-export const PAL_KEYS = [
-  "bg",
-  "bg2",
-  "panel",
-  "panel2",
-  "acc",
-  "acc2",
-  "acc-hi",
-  "acc-lo",
-  "text",
-  "muted",
-  "shadow",
-  "sparkle",
-] as const;
-export type PalKey = (typeof PAL_KEYS)[number];
-export type Palette = Record<PalKey, RGB>;
-
-/** Read the "r g b" channel tokens from :root so canvas and WebGL match the page */
-export function readPalette(): Palette {
-  const cs = getComputedStyle(document.documentElement);
-  const pal = {} as Palette;
-  PAL_KEYS.forEach((k) => {
-    const v = cs
-      .getPropertyValue(`--${k}-rgb`)
-      .trim()
-      .split(/[\s,/]+/)
-      .map(Number);
-    pal[k] =
-      v.length >= 3 && v.slice(0, 3).every((n) => Number.isFinite(n))
-        ? [v[0], v[1], v[2]]
-        : [128, 128, 128];
-  });
-  return pal;
 }

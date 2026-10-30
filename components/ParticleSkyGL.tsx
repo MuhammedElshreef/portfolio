@@ -2,13 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { fontFamily, prefersReducedMotion, store } from "@/lib/store";
+import { compactSkills, fontFamily, prefersReducedMotion, store } from "@/lib/store";
 
 /*
   The fixed particle sky behind the whole page, in raw three.js.
   The hero is a rotating night-sky galaxy with constellation lines that reach for the
   cursor, and a click shockwave. Scroll (store.stage) morphs the particles into "</>",
-  then a globe with an orbit ring, then a starfield.
+  then (desktop, with the skills sphere) a globe with an orbit ring. Where the page
+  has nothing for the sky to show, store.alpha goes to 0: the sky fades out, clears,
+  and stops its loop until SmoothScroll wakes it through store.skyWake.
 */
 
 const pointVS = /* glsl */ `
@@ -30,7 +32,10 @@ const pointVS = /* glsl */ `
   varying vec3 vColor;
   varying float vA;
   void main() {
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    // The idle drift lives here, so settled particles need no CPU work or uploads
+    float sd = aSeed * 20.0;
+    vec3 p = position + vec3(sin(uTime * 0.7 + sd), cos(uTime * 0.91 + sd), 0.0) * 0.014;
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     float tw = (1.0 - uTw) + uTw * sin(uTime * 2.3 + aSeed * 43.0);
     gl_PointSize = max(1.0, aSize * uScale * uSizeK * uPx * tw * (1.0 + aSpeed * 0.9) / -mv.z);
@@ -110,9 +115,9 @@ export default function ParticleSkyGL() {
 
       const coarse = matchMedia("(pointer: coarse)").matches;
       const mobile = coarse || Math.min(innerWidth, innerHeight) < 700;
-      const N = mobile ? 8000 : 20000;
-      // DPR cap
-      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      const N = mobile ? 5000 : 13000;
+      // DPR cap: the points are soft glows, so a lower backing resolution barely shows
+      const DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75);
       renderer.setPixelRatio(DPR);
       renderer.setSize(innerWidth, innerHeight, false);
       renderer.setClearColor(0x000000, 0);
@@ -145,7 +150,7 @@ export default function ParticleSkyGL() {
       const U = {
         uTime: { value: 0 },
         uPx: { value: DPR },
-        uScale: { value: mobile ? 30 : 34 },
+        uScale: { value: mobile ? 34 : 39 },
         uSizeK: { value: 1 },
         uTw: { value: 0.4 },
         uAlpha: { value: 0 },
@@ -290,8 +295,8 @@ export default function ParticleSkyGL() {
       }
       const CODE = sampleTextRaw("</>", mono, 800, 3);
 
-      // ---------- Formations: night sky, code glyph, globe, starfield ----------
-      const F = [new Float32Array(N * 3), new Float32Array(N * 3), new Float32Array(N * 3), new Float32Array(N * 3)];
+      // ---------- Formations: night sky, code glyph, globe ----------
+      const F = [new Float32Array(N * 3), new Float32Array(N * 3), new Float32Array(N * 3)];
       const GAL = new Float32Array(N * 3),
         galStatic = new Uint8Array(N),
         SPH = new Float32Array(N * 3),
@@ -474,14 +479,14 @@ export default function ParticleSkyGL() {
         if (wide) placeText(CODE, F[1], view.w * 0.3, view.h * 0.42, view.w * 0.24, 0, 0.45);
         else placeText(CODE, F[1], view.w * 0.72, view.h * 0.26, 0, view.h * 0.2, 0.45);
         sphereInto(F[2], Math.min(view.w, view.h) * (wide ? 0.3 : 0.34));
-        starsInto(F[3]);
         for (let i = 0; i < N; i++) {
           const xn = F[0][i * 3] / view.w + 0.5;
           delay[i] = Math.min(1, Math.max(0, 0.65 * xn + 0.35 * Math.random()));
         }
       }
       build();
-      pos.set(F[3]);
+      // The particles gather out of a loose scatter into the night sky
+      starsInto(pos);
 
       // ---------- Pointer and shockwave ----------
       const mouse = { x: 0, y: 0, t: -1e9 };
@@ -541,20 +546,57 @@ export default function ParticleSkyGL() {
       let time = 0,
         last = performance.now(),
         raf = 0,
+        asleep = false,
+        settled = false,
         stageS = 0,
         alphaS = 1,
         intro = 0,
         lineS = 0;
       const goAt = performance.now() + 6000;
+      // Phones and touch screens get the flat skills list, so no globe there
+      let maxStage = compactSkills() ? 1 : 2;
+      // The idle drift the shader adds, for the line ends that sit on a particle
+      const wob = (i: number, t: number): [number, number] => {
+        const sd = seed[i] * 20;
+        return [Math.sin(t * 0.7 + sd) * 0.014, Math.cos(t * 0.91 + sd) * 0.014];
+      };
+
+      function sleep() {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        asleep = true;
+        renderer.clear();
+        store.skyWake = wake;
+      }
+      function wake() {
+        if (!asleep) return;
+        asleep = false;
+        if (store.skyWake === wake) store.skyWake = null;
+        if (!document.hidden && !raf) {
+          last = performance.now();
+          raf = requestAnimationFrame(tick);
+        }
+      }
+
       function tick(now: number) {
         raf = requestAnimationFrame(tick);
-        const dt = Math.min(0.05, (now - last) / 1000);
+        // A rAF timestamp can trail a performance.now() taken just before it (after a wake)
+        const dt = Math.max(0, Math.min(0.05, (now - last) / 1000));
         last = now;
         const k60 = dt * 60;
         time += dt;
         if (store.go || now > goAt) intro = Math.min(1, intro + dt / 2.6);
-        stageS += (store.stage - stageS) * Math.min(1, dt * 3.5);
-        alphaS += (store.alpha - alphaS) * Math.min(1, dt * 2.5);
+        const wantStage = Math.min(maxStage, store.stage);
+        stageS += (wantStage - stageS) * Math.min(1, dt * 3.5);
+        if (Math.abs(wantStage - stageS) < 1e-4) stageS = wantStage;
+        // The sky steps back as the skills sphere settles into its groups
+        const wantAlpha = store.alpha * (1 - 0.55 * store.skillsFlat);
+        alphaS += (wantAlpha - alphaS) * Math.min(1, dt * 2.5);
+        // Nothing to show: clear the canvas and stop until SmoothScroll wakes the sky
+        if (wantAlpha <= 0 && alphaS < 0.003) {
+          sleep();
+          return;
+        }
         flash *= Math.pow(0.92, k60);
 
         const heroW = 1 - Math.min(1, Math.max(0, stageS / 0.45));
@@ -578,117 +620,134 @@ export default function ParticleSkyGL() {
         camera.position.y += (mouse.y * 0.32 - camera.position.y) * 0.035 * k60;
         camera.lookAt(0, 0, 0);
 
-        const st = Math.max(0, Math.min(3, stageS));
-        let a = Math.floor(st);
-        if (a > 2) a = 2;
+        // Formations: 0 night sky, 1 code glyph, 2 globe. a is the one being left, f how far
+        const st = Math.max(0, Math.min(maxStage, stageS));
+        const a = st >= 1 ? 1 : 0;
         const f = st - a;
-        if (a === 1 || a === 2) rotateSphere(time);
         if (a === 0) rotateGalaxy(time);
-        const A = a === 0 ? ROT0 : a === 2 ? SPH : F[a];
-        const B = a + 1 === 2 ? SPH : F[a + 1];
+        else if (f > 0) rotateSphere(time);
+        const A = a === 0 ? ROT0 : F[1];
+        const B = a === 0 ? F[1] : SPH;
 
         const mOn = now - mouse.t < 2500;
         let mwx = 1e6,
           mwy = 1e6;
         if (mOn) [mwx, mwy] = toWorld(mouse.x, mouse.y);
-        const R = (mobile ? 0.6 : 1) * cur.R,
-          R2 = R * R,
-          push = cur.push * k60,
-          zp = cur.zpush;
-        const stiff = (0.006 + 0.034 * intro * intro) * k60;
-        const damp = Math.pow(cur.damp, k60);
-        const tw = time * 0.7;
-        const wantCursor = mOn && lineS > 0.05;
-        const RC = 1.6,
-          RC2 = RC * RC;
-        let nc = 0;
 
-        for (let i = 0; i < N; i++) {
-          const i3 = i * 3;
-          let e = f * 1.55 - delay[i] * 0.55;
-          e = e < 0 ? 0 : e > 1 ? 1 : e;
-          e = e * e * (3 - 2 * e);
-          const sd = seed[i] * 20;
-          const tx = A[i3] + (B[i3] - A[i3]) * e + Math.sin(tw + sd) * 0.014;
-          const ty = A[i3 + 1] + (B[i3 + 1] - A[i3 + 1]) * e + Math.cos(tw * 1.3 + sd) * 0.014;
-          const tz = A[i3 + 2] + (B[i3 + 2] - A[i3 + 2]) * e;
-          let px = pos[i3],
-            py = pos[i3 + 1],
-            pz = pos[i3 + 2];
-          let vx = vel[i3] + (tx - px) * stiff,
-            vy = vel[i3 + 1] + (ty - py) * stiff,
-            vz = vel[i3 + 2] + (tz - pz) * stiff;
-          if (mOn) {
-            const dx = px - mwx,
-              dy = py - mwy,
-              d2 = dx * dx + dy * dy;
-            if (d2 < R2) {
-              const d = Math.sqrt(d2) + 1e-4,
-                fo = (1 - d / R) * push;
-              vx += (dx / d) * fo;
-              vy += (dy / d) * fo;
-              vz += fo * zp;
-            }
-            if (wantCursor && nc < MAXC && d2 < RC2 && d2 > 0.04 && (i & 7) === 0) {
-              cursorIdx[nc] = i;
-              cursorA[nc] = 1 - Math.sqrt(d2) / RC;
-              nc++;
-            }
-          }
-          vx *= damp;
-          vy *= damp;
-          vz *= damp;
-          px += vx * k60;
-          py += vy * k60;
-          pz += vz * k60;
-          pos[i3] = px;
-          pos[i3 + 1] = py;
-          pos[i3 + 2] = pz;
-          vel[i3] = vx;
-          vel[i3 + 1] = vy;
-          vel[i3 + 2] = vz;
-          const s = Math.sqrt(vx * vx + vy * vy + vz * vz) * 14;
-          speed[i] = s > 1 ? 1 : s;
-        }
+        // Resting on the glyph with no pointer nearby: the particles have stopped, so skip
+        // the physics and the buffer uploads (the shader keeps them drifting and twinkling)
+        const canRest = a === 1 && f === 0 && !mOn && flash < 1e-3;
+        if (!canRest) settled = false;
+        if (!settled) {
+          const R = (mobile ? 0.6 : 1) * cur.R,
+            R2 = R * R,
+            push = cur.push * k60,
+            zp = cur.zpush;
+          const stiff = (0.006 + 0.034 * intro * intro) * k60;
+          const damp = Math.pow(cur.damp, k60);
+          const wantCursor = mOn && lineS > 0.05;
+          const RC = 1.6,
+            RC2 = RC * RC;
+          let nc = 0,
+            maxV2 = 0;
 
-        // Lines: twinkling constellations plus threads to the cursor
-        let v = 0;
-        if (lineS > 0.01) {
-          const np = pairs.length >> 1;
-          for (let k = 0; k < np; k++) {
-            const i = pairs[k * 2] * 3,
-              j = pairs[k * 2 + 1] * 3,
-              o = v * 3;
-            lpos[o] = pos[i];
-            lpos[o + 1] = pos[i + 1];
-            lpos[o + 2] = pos[i + 2];
-            lpos[o + 3] = pos[j];
-            lpos[o + 4] = pos[j + 1];
-            lpos[o + 5] = pos[j + 2];
-            const al = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * 1.4 + k * 1.7));
-            lal[v] = al;
-            lal[v + 1] = al;
-            v += 2;
+          for (let i = 0; i < N; i++) {
+            const i3 = i * 3;
+            let e = f * 1.55 - delay[i] * 0.55;
+            e = e < 0 ? 0 : e > 1 ? 1 : e;
+            e = e * e * (3 - 2 * e);
+            const tx = A[i3] + (B[i3] - A[i3]) * e;
+            const ty = A[i3 + 1] + (B[i3 + 1] - A[i3 + 1]) * e;
+            const tz = A[i3 + 2] + (B[i3 + 2] - A[i3 + 2]) * e;
+            let px = pos[i3],
+              py = pos[i3 + 1],
+              pz = pos[i3 + 2];
+            let vx = vel[i3] + (tx - px) * stiff,
+              vy = vel[i3 + 1] + (ty - py) * stiff,
+              vz = vel[i3 + 2] + (tz - pz) * stiff;
+            if (mOn) {
+              const dx = px - mwx,
+                dy = py - mwy,
+                d2 = dx * dx + dy * dy;
+              if (d2 < R2) {
+                const d = Math.sqrt(d2) + 1e-4,
+                  fo = (1 - d / R) * push;
+                vx += (dx / d) * fo;
+                vy += (dy / d) * fo;
+                vz += fo * zp;
+              }
+              if (wantCursor && nc < MAXC && d2 < RC2 && d2 > 0.04 && (i & 7) === 0) {
+                cursorIdx[nc] = i;
+                cursorA[nc] = 1 - Math.sqrt(d2) / RC;
+                nc++;
+              }
+            }
+            vx *= damp;
+            vy *= damp;
+            vz *= damp;
+            px += vx * k60;
+            py += vy * k60;
+            pz += vz * k60;
+            pos[i3] = px;
+            pos[i3 + 1] = py;
+            pos[i3 + 2] = pz;
+            vel[i3] = vx;
+            vel[i3 + 1] = vy;
+            vel[i3 + 2] = vz;
+            const v2 = vx * vx + vy * vy + vz * vz;
+            if (v2 > maxV2) maxV2 = v2;
+            const s = Math.sqrt(v2) * 14;
+            speed[i] = s > 1 ? 1 : s;
           }
-          for (let c = 0; c < nc; c++) {
-            const i = cursorIdx[c] * 3,
-              o = v * 3;
-            lpos[o] = mwx;
-            lpos[o + 1] = mwy;
-            lpos[o + 2] = 0;
-            lpos[o + 3] = pos[i];
-            lpos[o + 4] = pos[i + 1];
-            lpos[o + 5] = pos[i + 2];
-            lal[v] = cursorA[c] * 1.6;
-            lal[v + 1] = cursorA[c] * 0.6;
-            v += 2;
+          posAttr.needsUpdate = true;
+          speedAttr.needsUpdate = true;
+          settled = canRest && maxV2 < 1e-9;
+
+          // Lines: twinkling constellations plus threads to the cursor (hero only)
+          let v = 0;
+          if (lineS > 0.01 && alphaS > 0.01) {
+            const np = pairs.length >> 1;
+            for (let k = 0; k < np; k++) {
+              const pi = pairs[k * 2],
+                pj = pairs[k * 2 + 1],
+                i = pi * 3,
+                j = pj * 3,
+                o = v * 3,
+                wi = wob(pi, time),
+                wj = wob(pj, time);
+              lpos[o] = pos[i] + wi[0];
+              lpos[o + 1] = pos[i + 1] + wi[1];
+              lpos[o + 2] = pos[i + 2];
+              lpos[o + 3] = pos[j] + wj[0];
+              lpos[o + 4] = pos[j + 1] + wj[1];
+              lpos[o + 5] = pos[j + 2];
+              const al = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * 1.4 + k * 1.7));
+              lal[v] = al;
+              lal[v + 1] = al;
+              v += 2;
+            }
+            for (let c = 0; c < nc; c++) {
+              const pc = cursorIdx[c],
+                i = pc * 3,
+                o = v * 3,
+                w = wob(pc, time);
+              lpos[o] = mwx;
+              lpos[o + 1] = mwy;
+              lpos[o + 2] = 0;
+              lpos[o + 3] = pos[i] + w[0];
+              lpos[o + 4] = pos[i + 1] + w[1];
+              lpos[o + 5] = pos[i + 2];
+              lal[v] = cursorA[c] * 1.6;
+              lal[v + 1] = cursorA[c] * 0.6;
+              v += 2;
+            }
+          }
+          lgeo.setDrawRange(0, v);
+          if (v) {
+            lposAttr.needsUpdate = true;
+            lalAttr.needsUpdate = true;
           }
         }
-        lgeo.setDrawRange(0, v);
-        lposAttr.needsUpdate = true;
-        lalAttr.needsUpdate = true;
-        posAttr.needsUpdate = true;
-        speedAttr.needsUpdate = true;
         renderer.render(scene, camera);
       }
 
@@ -696,9 +755,12 @@ export default function ParticleSkyGL() {
       let builtW = innerWidth,
         builtH = innerHeight;
       on(window, "resize", () => {
+        // A zero-sized window (some resizes pass through one) would fill the sky with NaN
+        if (!innerWidth || !innerHeight) return;
         renderer.setSize(innerWidth, innerHeight, false);
         camera.aspect = innerWidth / innerHeight;
         camera.updateProjectionMatrix();
+        maxStage = compactSkills() ? 1 : 2;
         // Rebuild only for a real resize: a mobile URL bar collapsing must not re-randomise the sky
         if (innerWidth === builtW && Math.abs(innerHeight - builtH) <= 150) return;
         clearTimeout(resizeT);
@@ -706,6 +768,7 @@ export default function ParticleSkyGL() {
           builtW = innerWidth;
           builtH = innerHeight;
           build();
+          settled = false;
         }, 180);
       });
       // Pause while the tab is hidden
@@ -713,7 +776,7 @@ export default function ParticleSkyGL() {
         if (document.hidden) {
           cancelAnimationFrame(raf);
           raf = 0;
-        } else if (!raf) {
+        } else if (!raf && !asleep) {
           last = performance.now();
           raf = requestAnimationFrame(tick);
         }
@@ -724,6 +787,7 @@ export default function ParticleSkyGL() {
         cancelAnimationFrame(raf);
         raf = 0;
         clearTimeout(resizeT);
+        if (store.skyWake === wake) store.skyWake = null;
       });
 
       root.classList.add("gl-on");

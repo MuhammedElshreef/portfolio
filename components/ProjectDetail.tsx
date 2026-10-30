@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { ProjectLink } from "@/lib/content";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion, store } from "@/lib/store";
+import Terminal, { type TerminalLabels } from "./Terminal";
 
-export type DetailProject = { title: string; description: string; techs: string[]; links: ProjectLink[] };
+export type DetailProject = { slug: string; title: string; kind?: string; description: string; techs: string[]; links: ProjectLink[] };
 
-type Labels = { close: string; noLink: string; previewSuffix: string };
+type Labels = { close: string; noLink: string; terminal: TerminalLabels };
 
 // Keeps Tab and assistive tech out of the page behind the dialog
 const setBackdropInert = (on: boolean) => {
@@ -15,16 +16,18 @@ const setBackdropInert = (on: boolean) => {
   document.getElementById("nav")?.toggleAttribute("inert", on);
 };
 
-const cardImg = (i: number) => document.querySelector<HTMLImageElement>(`.pcard[data-i="${i}"] .pcard-img`);
+// The card's terminal, which the detail terminal grows out of and shrinks back into
+const cardFrame = (i: number) => document.querySelector<HTMLElement>(`.tcard[data-i="${i}"] .term`);
+const moving = (on: boolean) => document.getElementById("detail")?.classList.toggle("is-moving", on);
 
 /*
-  Project detail view. The cover flies out of the ring card into place (FLIP) and
-  flies back on close. Opened by the ring through store.openDetail.
+  Project detail view. The card's terminal grows into a large terminal beside the
+  description (FLIP) and shrinks back into the card on close. Opened by the track
+  through store.openDetail.
 */
 export default function ProjectDetail({ projects, labels }: { projects: DetailProject[]; labels: Labels }) {
   const [idx, setIdx] = useState(-1);
   const mediaRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -46,9 +49,8 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       store.detailOpen = false;
       openIdx.current = -1;
       document.documentElement.classList.remove("modal-open");
+      moving(false);
       setBackdropInert(false);
-      store.lenis?.start();
-      ScrollTrigger.refresh();
       gsap.set(parts, { clearProps: "all" });
       setIdx(-1);
       lastFocus.current?.focus?.({ preventScroll: true });
@@ -58,7 +60,8 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       return;
     }
     closing.current = true;
-    const card = cardImg(openIdx.current);
+    moving(true);
+    const card = cardFrame(openIdx.current);
     const to = dMedia.getBoundingClientRect();
     const from = card ? card.getBoundingClientRect() : to;
     gsap.to(dBody.children, { y: 20, opacity: 0, duration: 0.3, stagger: 0.03 });
@@ -71,7 +74,10 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       scaleY: from.height / to.height,
       duration: 0.85,
       ease: "expo.inOut",
-      onComplete: done,
+      // Land on the card, then fade out over it so the hand-over never snaps
+      onComplete: () => {
+        gsap.to(dMedia, { opacity: 0, duration: 0.18, ease: "power1.out", onComplete: done });
+      },
     });
   }, []);
 
@@ -103,16 +109,13 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
   useLayoutEffect(() => {
     if (idx < 0) return;
     const dMedia = mediaRef.current,
-      dImg = imgRef.current,
       dBody = bodyRef.current,
       dScrim = scrimRef.current,
       dClose = closeRef.current;
-    if (!dMedia || !dImg || !dBody || !dScrim || !dClose) return;
-    const card = cardImg(idx);
-    dImg.src = store.covers[idx] || card?.src || "";
+    if (!dMedia || !dBody || !dScrim || !dClose) return;
+    const card = cardFrame(idx);
     document.documentElement.classList.add("modal-open");
     setBackdropInert(true);
-    store.lenis?.stop();
     if (!prefersReducedMotion()) {
       const to = dMedia.getBoundingClientRect();
       const from = card ? card.getBoundingClientRect() : to;
@@ -121,6 +124,7 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
         { x: from.left - to.left, y: from.top - to.top, scaleX: from.width / to.width, scaleY: from.height / to.height },
         { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 1, ease: "expo.inOut" },
       );
+      moving(true);
       gsap.fromTo(dScrim, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" });
       gsap.fromTo(
         dBody.children,
@@ -128,6 +132,10 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
         { y: 0, opacity: 1, duration: 0.9, ease: "expo.out", stagger: 0.07, delay: 0.5 },
       );
       gsap.fromTo(dClose, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5, delay: 0.7 });
+      // The text finishes rising at about 1.6s; the panel may scroll again after that
+      gsap.delayedCall(1.65, () => {
+        if (!closing.current) moving(false);
+      });
     }
     dClose.focus({ preventScroll: true });
   }, [idx]);
@@ -141,17 +149,14 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
-      data-lenis-prevent=""
     >
       <div className="detail-scrim" id="detail-scrim" ref={scrimRef} onClick={close} />
       <button type="button" className="btn btn-ghost btn-sm detail-close" id="detail-close" ref={closeRef} onClick={close}>
         {labels.close}
       </button>
       <div className="detail-panel wrap">
-        <div className="detail-media" id="detail-media" ref={mediaRef}>
-          {/* The cover is a canvas-generated data URL, so next/image does not apply */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="detail-img" id="detail-img" ref={imgRef} alt={p ? `${p.title} ${labels.previewSuffix}` : ""} />
+        <div className="detail-media" id="detail-media" ref={mediaRef} aria-hidden="true">
+          {p && <Terminal project={{ ...p, live: p.links.length > 0 }} index={idx} labels={labels.terminal} big />}
         </div>
         <div className="detail-body" id="detail-body" ref={bodyRef}>
           {p && (

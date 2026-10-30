@@ -1,16 +1,26 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
 import type { SkillGroupKey } from "@/lib/content";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { clamp, fontsReady, prefersReducedMotion, store } from "@/lib/store";
+import { clamp, COMPACT_SKILLS_MQ, fontsReady, prefersReducedMotion, store } from "@/lib/store";
 
 export type SphereTag = { name: string; key: SkillGroupKey };
 
 /*
   A tag sphere you can drag. The section pins, and by its end the tags fly into
   three labelled groups (Front-end, Back-end, Tools); scrolling back unwinds them.
+  Phones, narrow windows and touch screens skip the sphere: they get the groups as
+  plain chip rows that rise in once (CSS keys the layout off the same media query).
 */
+const subscribeCompact = (cb: () => void) => {
+  const mq = matchMedia(COMPACT_SKILLS_MQ);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+const getCompact = () => matchMedia(COMPACT_SKILLS_MQ).matches;
+const getCompactServer = () => false;
+
 export default function SkillsSphere({
   tags,
   groups,
@@ -23,15 +33,34 @@ export default function SkillsSphere({
   children: ReactNode;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const compact = useSyncExternalStore(subscribeCompact, getCompact, getCompactServer);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    const sgrid = section.querySelector<HTMLElement>("#skills-grid")!;
+    if (compact) {
+      // Flat list: no pin, no sphere loop, the groups rise in once when they come into view
+      store.skillsFlat = 0;
+      if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+        sgrid.classList.add("in");
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          sgrid.classList.add("in");
+          io.disconnect();
+        },
+        { rootMargin: "0px 0px -12% 0px" },
+      );
+      io.observe(sgrid);
+      return () => io.disconnect();
+    }
     const RM = prefersReducedMotion();
     const MOTION = !RM;
     const sph = section.querySelector<HTMLElement>("#sphere")!,
       tagsUl = section.querySelector<HTMLElement>("#tags")!,
-      sgrid = section.querySelector<HTMLElement>("#skills-grid")!,
       legend = section.querySelector<HTMLElement>(".legend");
     const tagEls = Array.from(tagsUl.querySelectorAll<HTMLElement>(".tag")),
       tn = tagEls.length;
@@ -211,27 +240,38 @@ export default function SkillsSphere({
       removeEventListener("resize", sizeSphere);
       ScrollTrigger.removeEventListener("refresh", sizeSphere);
       ctx.revert();
+      tagEls.forEach((t) => t.removeAttribute("style"));
+      sgrid.style.removeProperty("--lab");
+      if (legend) legend.style.removeProperty("opacity");
+      sph.classList.remove("is-flat");
       store.skillsFlat = 0;
     };
-  }, []);
+  }, [compact]);
 
   return (
     <section id="skills" className="skills" aria-labelledby="skills-title" ref={sectionRef}>
       {children}
       <div className="skills-stage" id="skills-stage">
-        <div className="skills-grid" id="skills-grid" aria-hidden="true">
-          {groups.map((g) => (
-            <div className={`sg-group sg-${g.key}`} key={g.key}>
+        {/* The sphere's list is the accessible one on desktop; the flat list replaces it on compact screens */}
+        <div className="skills-grid" id="skills-grid" aria-hidden={compact ? undefined : true}>
+          {groups.map((g, gi) => (
+            <div className={`sg-group sg-${g.key}`} key={g.key} style={{ "--gi": gi } as CSSProperties}>
               <p className="sg-label">{g.name}</p>
-              <div className="sg-row">
-                {tags.map((t, i) =>
-                  t.key === g.key ? (
-                    <span className={`tag ${t.key} slot`} data-k={i} key={t.name}>
+              <ul className="sg-row" aria-label={g.name}>
+                {tags
+                  .map((t, i) => ({ ...t, i }))
+                  .filter((t) => t.key === g.key)
+                  .map((t, ci) => (
+                    <li
+                      className={`tag ${t.key} slot`}
+                      data-k={t.i}
+                      key={t.name}
+                      style={{ "--ci": ci } as CSSProperties}
+                    >
                       {t.name}
-                    </span>
-                  ) : null,
-                )}
-              </div>
+                    </li>
+                  ))}
+              </ul>
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import CursorBubble from "@/components/CursorBubble";
-import ExperienceStack, { type Job } from "@/components/ExperienceStack";
+import ExperienceLedger, { type LedgerRow } from "@/components/ExperienceLedger";
 import Grain from "@/components/Grain";
 import HeroHint from "@/components/HeroHint";
 import HeroTitle from "@/components/HeroTitle";
@@ -11,7 +11,7 @@ import Marquee from "@/components/Marquee";
 import ParticleSky from "@/components/ParticleSky";
 import Portrait from "@/components/Portrait";
 import ProjectDetail from "@/components/ProjectDetail";
-import ProjectRing from "@/components/ProjectRing";
+import ProjectTrack from "@/components/ProjectTrack";
 import ScrollReveals from "@/components/ScrollReveals";
 import SkillsSphere from "@/components/SkillsSphere";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -32,25 +32,26 @@ import {
   type RichText,
 } from "@/lib/content";
 
-// Projects shown in the ring, in display order
+// Projects shown in the track, in display order
 const allProjects: Project[] = projects.items;
 const featured = projects.featured
   .map((slug) => allProjects.find((p) => p.slug === slug))
   .filter((p): p is Project => Boolean(p));
 
-const ringProjects = featured.map(({ title, techs, links, cover }) => ({ title, techs, links, cover }));
-const detailProjects = featured.map(({ title, description, techs, links }) => ({ title, description, techs, links }));
+const trackProjects = featured.map(({ slug, title, kind, techs, links }) => ({ slug, title, kind, techs, live: links.length > 0 }));
+const detailProjects = featured.map(({ slug, title, kind, description, techs, links }) => ({ slug, title, kind, description, techs, links }));
 
 const groupOf = (name: string) => skills.groups.find((g) => (g.items as string[]).includes(name))?.key ?? "tl";
 const sphereTags = skills.sphereOrder.map((name) => ({ name, key: groupOf(name) }));
 
-const jobs: Job[] = [
+const ledger: LedgerRow[] = [
   ...experience.items.map((j) => ({
     from: j.from,
     to: j.to,
     role: j.role,
     company: j.company,
     url: "companyUrl" in j ? j.companyUrl : undefined,
+    color: j.color,
     current: "current" in j ? j.current : undefined,
     description: j.description,
   })),
@@ -59,6 +60,9 @@ const jobs: Job[] = [
     to: experience.education.to,
     role: experience.education.degree,
     company: experience.education.institution,
+    color: "var(--acc)",
+    current: true,
+    description: experience.education.description,
   },
 ];
 
@@ -71,7 +75,7 @@ function Rich({ text }: { text: RichText }) {
 export default function Home() {
   return (
     <>
-      <Intro name={intro.name} />
+      <Intro name={intro.name} role={intro.role} />
       <div className="backdrop" aria-hidden="true" />
       <ParticleSky />
       <Grain />
@@ -98,9 +102,6 @@ export default function Home() {
 
       <main>
         <section id="hero" className="hero" aria-label={hero.sectionLabel}>
-          <p className="hero-ar-fallback" lang="ar" dir="rtl" aria-hidden="true">
-            {seo.arabicName}
-          </p>
           <div className="wrap hero-grid">
             <HeroTitle lines={hero.titleLines} label={hero.name} />
             <div className="hero-side">
@@ -134,23 +135,14 @@ export default function Home() {
           </p>
         </section>
 
-        <ProjectRing
-          projects={ringProjects}
-          labels={{
-            ring: work.ringLabel,
-            prev: work.prevLabel,
-            next: work.nextLabel,
-            index: work.indexLabel,
-            techSeparator: work.techSeparator,
-          }}
-        >
+        <ProjectTrack projects={trackProjects} labels={{ open: work.open, terminal: work.terminal }}>
           <div className="wrap work-head">
             <h2 className="work-label" id="work-title">
               {work.title}
             </h2>
             <p className="work-note">{work.note}</p>
           </div>
-        </ProjectRing>
+        </ProjectTrack>
 
         <SkillsSphere tags={sphereTags} groups={skills.groups} listLabel={skills.listLabel}>
           <div className="wrap skills-head">
@@ -185,14 +177,14 @@ export default function Home() {
           <h2 className="h2" id="exp-title" data-rise="">
             {experience.title}
           </h2>
-          <ExperienceStack jobs={jobs} currentBadge={experience.currentBadge} />
+          <ExperienceLedger rows={ledger} nowLabel={experience.currentBadge} />
         </section>
 
         <section id="contact" className="contact" aria-labelledby="contact-title">
           <h2 className="sr-only" id="contact-title">
             {contact.title}
           </h2>
-          <Marquee en={contact.marquee.en} ar={contact.marquee.ar} />
+          <Marquee text={contact.marquee} />
           <div className="wrap contact-in">
             <p className="contact-sub" data-rise="">
               {contact.subheading}
@@ -224,7 +216,7 @@ export default function Home() {
 
       <ProjectDetail
         projects={detailProjects}
-        labels={{ close: work.close, noLink: work.noLink, previewSuffix: work.previewSuffix }}
+        labels={{ close: work.close, noLink: work.noLink, terminal: work.terminal }}
       />
       <CursorBubble label={work.bubble} />
       <Magnetic />

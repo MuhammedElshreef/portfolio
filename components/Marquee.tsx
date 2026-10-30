@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { clamp, prefersReducedMotion } from "@/lib/store";
 
-/** One bilingual marquee line. It speeds up, skews and flips direction with your scroll. */
-export default function Marquee({ en, ar }: { en: string; ar: string }) {
+/** One marquee line. It speeds up, skews and flips direction with your scroll. */
+export default function Marquee({ text }: { text: string }) {
   const rowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,14 +41,10 @@ export default function Marquee({ en, ar }: { en: string; ar: string }) {
 
   const group = (
     <span className="mq-group">
-      <span>{en}</span>
-      <span className="mq-ar" lang="ar" dir="rtl">
-        {ar}
-      </span>
-      <span className="mq-out">{en}</span>
-      <span className="mq-ar" lang="ar" dir="rtl">
-        {ar}
-      </span>
+      <span>{text}</span>
+      <span className="mq-sep" />
+      <span className="mq-out">{text}</span>
+      <span className="mq-sep" />
     </span>
   );
   return (

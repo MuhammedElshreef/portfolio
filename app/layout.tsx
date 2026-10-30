@@ -21,7 +21,7 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-// Arabic name in the logo, intro, marquee and footer
+// Arabic name in the logo, intro and footer
 const rakkas = Rakkas({
   variable: "--font-rakkas",
   weight: "400",
