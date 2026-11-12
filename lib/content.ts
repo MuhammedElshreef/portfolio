@@ -32,11 +32,40 @@ export type ExperienceItem = {
 
 export const seo = {
   url: "https://alsayed.ly",
-  title: "Muhammed Alsayed | Full-Stack Web Developer",
+  title: "Muhammed Alsayed (Elshreef) | محمد السيد | Full-Stack Web Developer",
   description:
-    "Portfolio of Muhammed Alsayed (محمد السيد), a full-stack web developer in Tripoli, Libya building production-grade web platforms: Laravel and Filament back-ends, Angular, Vue, and React front-ends.",
+    "Portfolio of Muhammed Khaled Alsayed (محمد خالد السيد), also known as Muhammed Elshreef (محمد الشريف), a full-stack web developer in Tripoli, Libya building production-grade web platforms: Laravel and Filament back-ends, Angular, Vue, and React front-ends.",
   arabicName: "محمد السيد",
+  fullName: "Muhammed Khaled Alsayed",
+  arabicFullName: "محمد خالد السيد",
   role: "Full-Stack Web Developer",
+  // Every name people may search for, in English and Arabic, with common spellings.
+  // Used in the structured data and keywords; the main ones are also visible on the page.
+  aliases: [
+    "Muhammed Alsayed",
+    "Muhammed Khaled Alsayed",
+    "Muhammed Elshreef",
+    "Muhammed Khaled Elshreef",
+    "Elshreef",
+    "Elshreef dev",
+    "Alsayed",
+    "Mohammed Alsayed",
+    "Mohamed Alsayed",
+    "Muhammad Alsayed",
+    "Mohamed Elsayed",
+    "Muhammed Al-Sayed",
+    "Mohamed Elshreef",
+    "Muhammed Elsharif",
+    "محمد السيد",
+    "محمد خالد السيد",
+    "محمد الشريف",
+    "محمد خالد الشريف",
+    "السيد",
+    "الشريف",
+    "المهندس محمد",
+    "المهندس محمد السيد",
+    "م. محمد السيد",
+  ],
 };
 
 export const hero = {
@@ -61,7 +90,9 @@ export const about = {
   heading: "Hi, I'm Muhammed",
   paragraphs: [
     [
-      "I'm a ",
+      "I'm ",
+      { strong: "Muhammed Khaled Alsayed" },
+      ", also known as Muhammed Elshreef, a ",
       { strong: "Full-Stack Web Developer" },
       " with a passion for creating beautiful and functional web applications. I enjoy learning new technologies, building things, and helping people.",
     ],
@@ -377,7 +408,7 @@ export const nav = {
 
 // The splash: light flows through the </>, then the brackets open on the name
 export const intro = {
-  name: hero.name,
+  name: "Elshreef dev",
   role: "Full-stack web developer",
 };
 
@@ -410,5 +441,9 @@ export const work = {
 
 export const footer = {
   copyright: "© 2026 Muhammed Alsayed",
+  // The handle, signed off like a terminal prompt
+  handle: "Elshreef dev",
+  // Under the Arabic logo: the full Arabic name and the other name people know
+  arabicAka: "محمد خالد السيد · محمد الشريف",
   backToTop: "Back to top",
 };

@@ -40,6 +40,7 @@ export const metadata: Metadata = {
     title: seo.title,
     description: seo.description,
     locale: "en_US",
+    alternateLocale: ["ar_LY"],
   },
   twitter: {
     card: "summary_large_image",
@@ -50,8 +51,9 @@ export const metadata: Metadata = {
   creator: hero.name,
   verification: { google: "OyGvo6F2g1HHO67c1GBQY85gsKFkDFG2DokAFhUdKJg" },
   keywords: [
-    hero.name,
-    seo.arabicName,
+    ...seo.aliases,
+    "Muhammed",
+    "محمد",
     "Full-Stack Web Developer",
     "مطور ويب",
     "Tripoli",
@@ -68,18 +70,39 @@ export const viewport: Viewport = {
   themeColor: "#07090c",
 };
 
-// Structured data so search engines understand who this site is about
-const personJsonLd = {
+// Structured data so search engines understand who this site is about, under every name
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: hero.name,
-  alternateName: seo.arabicName,
-  url: seo.url,
-  jobTitle: hero.role.join(" "),
-  email: `mailto:${contact.email}`,
-  address: { "@type": "PostalAddress", addressLocality: "Tripoli", addressCountry: "LY" },
-  alumniOf: experience.education.institution,
-  sameAs: contact.socials.map((social) => social.url),
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${seo.url}/#person`,
+      name: seo.fullName,
+      givenName: "Muhammed",
+      additionalName: "Khaled",
+      familyName: "Alsayed",
+      alternateName: seo.aliases,
+      honorificPrefix: "Eng.",
+      url: seo.url,
+      image: `${seo.url}/me.jpg`,
+      jobTitle: seo.role,
+      description: seo.description,
+      email: `mailto:${contact.email}`,
+      address: { "@type": "PostalAddress", addressLocality: "Tripoli", addressCountry: "LY" },
+      alumniOf: { "@type": "CollegeOrUniversity", name: experience.education.institution },
+      knowsLanguage: ["ar", "en"],
+      sameAs: contact.socials.map((social) => social.url),
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${seo.url}/#website`,
+      url: seo.url,
+      name: hero.name,
+      alternateName: [seo.fullName, "Elshreef", seo.arabicName, seo.arabicFullName],
+      inLanguage: "en",
+      publisher: { "@id": `${seo.url}/#person` },
+    },
+  ],
 };
 
 // Runs before first paint: motion styles (intro, sticky cards) only when motion is allowed
@@ -102,7 +125,7 @@ export default function RootLayout({
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {children}
         <Analytics />

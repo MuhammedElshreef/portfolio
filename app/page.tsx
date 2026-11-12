@@ -203,9 +203,16 @@ export default function Home() {
             </div>
           </div>
           <footer className="foot wrap">
-            <span>{footer.copyright}</span>
-            <span className="foot-ar" lang="ar" dir="rtl">
-              {seo.arabicName}
+            <span className="foot-copy">
+              {footer.copyright}
+              <span className="foot-sig">
+                {footer.handle}
+                <span className="term-cur" aria-hidden="true" />
+              </span>
+            </span>
+            <span className="foot-names" lang="ar" dir="rtl">
+              <span className="foot-ar">{seo.arabicName}</span>
+              <span className="foot-aka">{footer.arabicAka}</span>
             </span>
             <button type="button" className="foot-top" id="foot-top">
               {footer.backToTop}

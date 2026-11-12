@@ -443,7 +443,12 @@ main { position: relative; z-index: 1; }
 .mail-text .ch:hover { color: var(--acc); }
 .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+.foot-copy { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; }
+.foot-sig { display: inline-flex; align-items: center; font: 500 13px/1 var(--mono); color: var(--acc); padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.foot-sig .term-cur { width: 0.55em; height: 1em; margin-left: 6px; vertical-align: 0; }
+.foot-names { display: grid; justify-items: center; gap: 2px; }
 .foot-ar { font: 400 26px/1.4 var(--arab); color: var(--acc); }
+.foot-aka { font: 500 13px/1.5 system-ui, "Segoe UI", Tahoma, sans-serif; color: var(--muted); }
 .foot-top { background: none; border: 0; cursor: pointer; color: var(--text); font-weight: 600; padding: 8px 0; }
 .foot-top:hover { color: var(--acc); }
 
