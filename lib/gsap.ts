@@ -2,6 +2,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Imported by client components only. Register once, in the browser.
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+  // A phone's address bar sliding away is not a real resize: do not re-measure for it
+  ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
 export { gsap, ScrollTrigger };

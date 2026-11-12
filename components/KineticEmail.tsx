@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { kinetic } from "@/lib/kinetic";
-import { fontsReady } from "@/lib/store";
+import { fontsReady, onViewportResize } from "@/lib/store";
 
 /** The giant email line: fitted to the column width, its weight swells near the pointer */
 export default function KineticEmail({ email }: { email: string }) {
@@ -31,12 +31,12 @@ export default function KineticEmail({ email }: { email: string }) {
       clearTimeout(rfit);
       rfit = window.setTimeout(fitMail, 150);
     };
-    addEventListener("resize", onResize);
+    const offResize = onViewportResize(onResize);
     const offKinetic = kinetic(mailChars, mailLine, { g0: 480, g1: 800, radius: 170 });
     return () => {
       alive = false;
       clearTimeout(rfit);
-      removeEventListener("resize", onResize);
+      offResize();
       offKinetic();
       mailLine.style.fontSize = "";
     };

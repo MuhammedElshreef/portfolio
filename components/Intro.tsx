@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { fontsReady, lockScroll, prefersReducedMotion, store } from "@/lib/store";
+import { gsap } from "@/lib/gsap";
+import { fontsReady, lockScroll, prefersReducedMotion, skyReady, store } from "@/lib/store";
+
+const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 // The mark in viewBox units: "<" spans x 44..78, "/" 98..124, ">" 144..178, centre 111
 const VB = { x: 30, w: 162, mid: 111, ltInner: 78, brW: 34 };
@@ -29,6 +31,7 @@ export default function Intro({ name, role }: { name: string; role: string }) {
     }
     let alive = true;
     store.introActive = true;
+    store.introCover = true;
     lockScroll(true);
     const nav = document.getElementById("nav");
     const hint = document.getElementById("hero-hint");
@@ -56,11 +59,8 @@ export default function Intro({ name, role }: { name: string; role: string }) {
     const release = () => {
       store.go = true;
       store.introActive = false;
+      store.introCover = false;
       lockScroll(false);
-      // The scrollbar gutter and fonts may have shifted layout during the intro
-      requestAnimationFrame(() => {
-        if (alive) ScrollTrigger.refresh();
-      });
     };
     const finish = () => {
       if (alive) setGone(true);
@@ -72,7 +72,12 @@ export default function Intro({ name, role }: { name: string; role: string }) {
       gsap.set([...heroChars, ...dataIn, ...fade], { clearProps: "all" });
     }, 5000);
 
-    fontsReady().then(() => {
+    // The name must be measured in its real font, and the sky should finish building first
+    // so its set-up work does not land in the middle of the animation
+    const nameFont = document.fonts?.load
+      ? Promise.race([document.fonts.load(`700 32px ${getComputedStyle(nameEl).fontFamily}`, name), wait(2200)]).catch(() => {})
+      : Promise.resolve();
+    Promise.all([fontsReady(), nameFont, Promise.race([skyReady, wait(2600)])]).then(() => {
       if (!alive) return;
       // The timeline is running, so the failsafe is no longer needed
       clearTimeout(failsafe);
@@ -108,6 +113,7 @@ export default function Intro({ name, role }: { name: string; role: string }) {
       const unit = VB.w / mark.getBoundingClientRect().width;
       const nameW = nameEl.getBoundingClientRect().width * unit;
       const off = Math.max(0, nameW / 2 + 14 - (VB.mid - VB.ltInner));
+      const lightExit = matchMedia("(pointer: coarse)").matches;
       // Phones: shrink the stage if the open brackets would not fit the screen
       const need = (nameW + 2 * (14 + VB.brW) + 16) / unit,
         room = intro.clientWidth * 0.92;
@@ -135,7 +141,12 @@ export default function Intro({ name, role }: { name: string; role: string }) {
           .to(gr, { x: off, duration: 1.15 }, 2.36)
           .to(words, { yPercent: 0, duration: 1, stagger: 0.1 }, 2.55)
           .to(roleEl, { opacity: 1, y: 0, duration: 0.8 }, 2.95)
-          .to(center, { scale: 1.1, filter: "blur(10px)", duration: 0.9 }, 3.95)
+          // The sky starts gathering just before the splash lifts
+          .add(() => {
+            store.introCover = false;
+          }, 3.6)
+          // A full-screen blur is costly on phones, so touch screens only scale and fade
+          .to(center, lightExit ? { scale: 1.1, duration: 0.9 } : { scale: 1.1, filter: "blur(10px)", duration: 0.9 }, 3.95)
           .to(intro, { opacity: 0, duration: 0.8, ease: "power2.inOut", onComplete: finish }, 3.95)
           .add(release, 4.05)
           .to(nav ?? {}, { opacity: 1, duration: 0.8 }, 4.3)
@@ -150,9 +161,10 @@ export default function Intro({ name, role }: { name: string; role: string }) {
       clearTimeout(failsafe);
       ctx.revert();
       store.introActive = false;
+      store.introCover = false;
       lockScroll(false);
     };
-  }, []);
+  }, [name]);
 
   if (gone) return null;
   const [first, ...rest] = name.split(" ");

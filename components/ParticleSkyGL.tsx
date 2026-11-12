@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { compactSkills, fontFamily, prefersReducedMotion, store } from "@/lib/store";
+import { compactSkills, fontFamily, markSkyReady, prefersReducedMotion, store } from "@/lib/store";
 
 /*
   The fixed particle sky behind the whole page, in raw three.js.
@@ -78,7 +78,10 @@ export default function ParticleSkyGL() {
     if (!canvasEl) return;
     const canvas: HTMLCanvasElement = canvasEl;
     const root = document.documentElement;
-    const fallback = () => root.classList.add("no-gl");
+    const fallback = () => {
+      root.classList.add("no-gl");
+      markSkyReady();
+    };
     let dead = false;
     const disposers: (() => void)[] = [];
     const on = <K extends keyof WindowEventMap>(
@@ -118,12 +121,16 @@ export default function ParticleSkyGL() {
       const N = mobile ? 5000 : 13000;
       // DPR cap: the points are soft glows, so a lower backing resolution barely shows
       const DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75);
+      // The canvas box, not the window: the box keeps its size while a phone's address bar
+      // slides, and it leaves out the desktop scrollbar
+      let vw = canvas.clientWidth || innerWidth,
+        vh = canvas.clientHeight || innerHeight;
       renderer.setPixelRatio(DPR);
-      renderer.setSize(innerWidth, innerHeight, false);
+      renderer.setSize(vw, vh, false);
       renderer.setClearColor(0x000000, 0);
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+      const camera = new THREE.PerspectiveCamera(45, vw / vh, 0.1, 100);
       camera.position.set(0, 0, 10);
 
       // ---------- Particle buffers ----------
@@ -494,8 +501,10 @@ export default function ParticleSkyGL() {
         window,
         "pointermove",
         (e) => {
-          mouse.x = (e.clientX / innerWidth) * 2 - 1;
-          mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+          // A finger scrolling the page must not drag the sky around with it
+          if (e.pointerType === "touch") return;
+          mouse.x = (e.clientX / vw) * 2 - 1;
+          mouse.y = -(e.clientY / vh) * 2 + 1;
           mouse.t = performance.now();
         },
         { passive: true },
@@ -510,7 +519,7 @@ export default function ParticleSkyGL() {
       }
       let flash = 0;
       function burst(clientX: number, clientY: number) {
-        const [bx, by] = toWorld((clientX / innerWidth) * 2 - 1, -(clientY / innerHeight) * 2 + 1);
+        const [bx, by] = toWorld((clientX / vw) * 2 - 1, -(clientY / vh) * 2 + 1);
         for (let i = 0; i < N; i++) {
           const i3 = i * 3,
             dx = pos[i3] - bx,
@@ -526,12 +535,31 @@ export default function ParticleSkyGL() {
       }
       const hero = document.getElementById("hero");
       if (hero) {
+        // A mouse fires the shockwave on press. A finger fires it only on a tap: a touch that
+        // turns into a scroll is cancelled by the browser and never reaches pointerup.
+        let tap: { id: number; x: number; y: number; t: number } | null = null;
         const down = (e: PointerEvent) => {
           if ((e.target as Element).closest("a, button, h1, .hero-side")) return;
-          burst(e.clientX, e.clientY);
+          if (e.pointerType === "mouse") burst(e.clientX, e.clientY);
+          else tap = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp };
+        };
+        const up = (e: PointerEvent) => {
+          const t = tap;
+          tap = null;
+          if (!t || t.id !== e.pointerId) return;
+          if (e.timeStamp - t.t < 500 && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 12) burst(e.clientX, e.clientY);
+        };
+        const cancel = () => {
+          tap = null;
         };
         hero.addEventListener("pointerdown", down);
-        disposers.push(() => hero.removeEventListener("pointerdown", down));
+        hero.addEventListener("pointerup", up);
+        hero.addEventListener("pointercancel", cancel);
+        disposers.push(() => {
+          hero.removeEventListener("pointerdown", down);
+          hero.removeEventListener("pointerup", up);
+          hero.removeEventListener("pointercancel", cancel);
+        });
       }
 
       // Hero feel eases toward the scroll formations as you leave the hero
@@ -580,6 +608,11 @@ export default function ParticleSkyGL() {
 
       function tick(now: number) {
         raf = requestAnimationFrame(tick);
+        // Hidden behind the splash: leave the main thread to the splash animation
+        if (store.introCover) {
+          last = now;
+          return;
+        }
         // A rAF timestamp can trail a performance.now() taken just before it (after a wake)
         const dt = Math.max(0, Math.min(0.05, (now - last) / 1000));
         last = now;
@@ -752,21 +785,26 @@ export default function ParticleSkyGL() {
       }
 
       let resizeT = 0;
-      let builtW = innerWidth,
-        builtH = innerHeight;
+      let builtW = vw,
+        builtH = vh;
       on(window, "resize", () => {
-        // A zero-sized window (some resizes pass through one) would fill the sky with NaN
-        if (!innerWidth || !innerHeight) return;
-        renderer.setSize(innerWidth, innerHeight, false);
-        camera.aspect = innerWidth / innerHeight;
+        const w = canvas.clientWidth,
+          h = canvas.clientHeight;
+        // A zero-sized box (some resizes pass through one) would fill the sky with NaN.
+        // An unchanged box is a phone's address bar moving: nothing to redo.
+        if (!w || !h || (w === vw && h === vh)) return;
+        vw = w;
+        vh = h;
+        renderer.setSize(vw, vh, false);
+        camera.aspect = vw / vh;
         camera.updateProjectionMatrix();
         maxStage = compactSkills() ? 1 : 2;
-        // Rebuild only for a real resize: a mobile URL bar collapsing must not re-randomise the sky
-        if (innerWidth === builtW && Math.abs(innerHeight - builtH) <= 150) return;
+        // Rebuild only for a real resize, so a small height change does not re-randomise the sky
+        if (vw === builtW && Math.abs(vh - builtH) <= 150) return;
         clearTimeout(resizeT);
         resizeT = window.setTimeout(() => {
-          builtW = innerWidth;
-          builtH = innerHeight;
+          builtW = vw;
+          builtH = vh;
           build();
           settled = false;
         }, 180);
@@ -790,8 +828,12 @@ export default function ParticleSkyGL() {
         if (store.skyWake === wake) store.skyWake = null;
       });
 
+      // One invisible frame now compiles the shaders and uploads the buffers, so that cost
+      // is paid before the splash starts moving, not in the middle of it
+      renderer.render(scene, camera);
       root.classList.add("gl-on");
       raf = requestAnimationFrame(tick);
+      markSkyReady();
     }
 
     return () => {

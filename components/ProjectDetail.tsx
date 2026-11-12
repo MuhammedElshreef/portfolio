@@ -16,14 +16,34 @@ const setBackdropInert = (on: boolean) => {
   document.getElementById("nav")?.toggleAttribute("inert", on);
 };
 
-// The card's terminal, which the detail terminal grows out of and shrinks back into
-const cardFrame = (i: number) => document.querySelector<HTMLElement>(`.tcard[data-i="${i}"] .term`);
+const cardOf = (i: number) => document.querySelector<HTMLElement>(`.tcard[data-i="${i}"]`);
 const moving = (on: boolean) => document.getElementById("detail")?.classList.toggle("is-moving", on);
+// Opened from the command palette, the card can be far off screen: then there is nothing to fly from
+const onScreen = (el: Element) => {
+  const r = el.getBoundingClientRect();
+  return r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
+};
+
+// Where a terminal sits and how its corners are cut, as values the ghost frame can take
+const box = (el: Element) => {
+  const r = el.getBoundingClientRect();
+  const cs = getComputedStyle(el);
+  return {
+    left: r.left,
+    top: r.top,
+    width: r.width,
+    height: r.height,
+    "--t": cs.getPropertyValue("--t").trim(),
+    "--k": cs.getPropertyValue("--k").trim(),
+  };
+};
 
 /*
-  Project detail view. The card's terminal grows into a large terminal beside the
-  description (FLIP) and shrinks back into the card on close. Opened by the track
-  through store.openDetail.
+  Project detail view. The card and the detail terminal have different proportions and
+  different text layouts, so one is never stretched into the other. An empty terminal
+  frame (the ghost) travels between them, sized in real pixels: it fades in over the
+  card, grows to where the detail terminal sits, and the detail terminal fades in on top.
+  Closing runs the same steps backwards. Opened by the track through store.openDetail.
 */
 export default function ProjectDetail({ projects, labels }: { projects: DetailProject[]; labels: Labels }) {
   const [idx, setIdx] = useState(-1);
@@ -31,6 +51,8 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
   const bodyRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const ghostRef = useRef<HTMLSpanElement>(null);
+  const flight = useRef<gsap.core.Timeline | null>(null);
   const openIdx = useRef(-1);
   const lastFocus = useRef<HTMLElement | null>(null);
   const closing = useRef(false);
@@ -39,18 +61,24 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
     const dMedia = mediaRef.current,
       dScrim = scrimRef.current,
       dBody = bodyRef.current,
-      dClose = closeRef.current;
-    if (!store.detailOpen || closing.current || !dMedia || !dScrim || !dBody || !dClose) return;
-    const parts = [dMedia, dScrim, ...Array.from(dBody.children), dClose];
-    // A pending delayed open tween must not re-show text during the close
+      dClose = closeRef.current,
+      ghost = ghostRef.current;
+    if (!store.detailOpen || closing.current || !dMedia || !dScrim || !dBody || !dClose || !ghost) return;
+    const card = cardOf(openIdx.current);
+    const parts = [dMedia, dScrim, ...Array.from(dBody.children), dClose, ghost];
+    // A pending delayed open tween must not re-show anything during the close
     gsap.killTweensOf([...Array.from(dBody.children), dClose]);
+    const midFlight = !!flight.current?.isActive();
+    flight.current?.kill();
     const done = () => {
       closing.current = false;
       store.detailOpen = false;
       openIdx.current = -1;
+      flight.current = null;
       document.documentElement.classList.remove("modal-open");
       moving(false);
       setBackdropInert(false);
+      card?.classList.remove("is-open");
       gsap.set(parts, { clearProps: "all" });
       setIdx(-1);
       lastFocus.current?.focus?.({ preventScroll: true });
@@ -61,28 +89,29 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
     }
     closing.current = true;
     moving(true);
-    const card = cardFrame(openIdx.current);
-    const to = dMedia.getBoundingClientRect();
-    const from = card ? card.getBoundingClientRect() : to;
     gsap.to(dBody.children, { y: 20, opacity: 0, duration: 0.3, stagger: 0.03 });
     gsap.to(dClose, { opacity: 0, duration: 0.2 });
     gsap.to(dScrim, { opacity: 0, duration: 0.6, delay: 0.25 });
-    gsap.to(dMedia, {
-      x: from.left - to.left,
-      y: from.top - to.top,
-      scaleX: from.width / to.width,
-      scaleY: from.height / to.height,
-      duration: 0.85,
-      ease: "expo.inOut",
-      // Land on the card, then fade out over it so the hand-over never snaps
-      onComplete: () => {
-        gsap.to(dMedia, { opacity: 0, duration: 0.18, ease: "power1.out", onComplete: done });
-      },
-    });
+    const cardTerm = card?.querySelector<HTMLElement>(".term");
+    const bigTerm = dMedia.querySelector<HTMLElement>(".term");
+    if (!cardTerm || !bigTerm || !(midFlight || card?.classList.contains("is-open")) || !onScreen(cardTerm)) {
+      gsap.to(dMedia, { opacity: 0, duration: 0.3, onComplete: done });
+      return;
+    }
+    // Closed while still opening: the ghost carries on from wherever it is
+    if (!midFlight) gsap.set(ghost, { display: "flex", opacity: 1, ...box(bigTerm) });
+    flight.current = gsap
+      .timeline({ onComplete: done })
+      // The detail terminal fades away over the ghost, which sits right behind it
+      .to(dMedia, { opacity: 0, duration: 0.16, ease: "none" }, 0)
+      .to(ghost, { ...box(cardTerm), duration: 0.7, ease: "expo.inOut" }, 0.06)
+      // The ghost has landed on the card: bring the card back under it, then let go
+      .add(() => card?.classList.remove("is-open"))
+      .to(ghost, { opacity: 0, duration: 0.22, ease: "power1.out" });
   }, []);
 
   useEffect(() => {
-    const animated = [mediaRef.current, scrimRef.current, closeRef.current].filter(Boolean);
+    const animated = [mediaRef.current, scrimRef.current, closeRef.current, ghostRef.current].filter(Boolean);
     store.openDetail = (i: number) => {
       if (i < 0 || i >= projects.length || store.detailOpen) return;
       store.detailOpen = true;
@@ -101,31 +130,44 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       store.detailOpen = false;
       document.documentElement.classList.remove("modal-open");
       setBackdropInert(false);
+      flight.current?.kill();
       gsap.killTweensOf(animated);
+      document.querySelector(".tcard.is-open")?.classList.remove("is-open");
     };
   }, [projects.length, close]);
 
-  // Runs once the panel is visible, so the FLIP can measure both rects
+  // Runs once the panel is visible, so both terminals can be measured
   useLayoutEffect(() => {
     if (idx < 0) return;
     const dMedia = mediaRef.current,
       dBody = bodyRef.current,
       dScrim = scrimRef.current,
-      dClose = closeRef.current;
-    if (!dMedia || !dBody || !dScrim || !dClose) return;
-    const card = cardFrame(idx);
+      dClose = closeRef.current,
+      ghost = ghostRef.current;
+    if (!dMedia || !dBody || !dScrim || !dClose || !ghost) return;
+    const card = cardOf(idx);
     document.documentElement.classList.add("modal-open");
     setBackdropInert(true);
     if (!prefersReducedMotion()) {
-      const to = dMedia.getBoundingClientRect();
-      const from = card ? card.getBoundingClientRect() : to;
-      gsap.fromTo(
-        dMedia,
-        { x: from.left - to.left, y: from.top - to.top, scaleX: from.width / to.width, scaleY: from.height / to.height },
-        { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 1, ease: "expo.inOut" },
-      );
+      const cardTerm = card?.querySelector<HTMLElement>(".term");
+      const bigTerm = dMedia.querySelector<HTMLElement>(".term");
       moving(true);
       gsap.fromTo(dScrim, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" });
+      if (card && cardTerm && bigTerm && onScreen(cardTerm)) {
+        gsap.set(ghost, { display: "flex", opacity: 0, ...box(cardTerm) });
+        gsap.set(dMedia, { opacity: 0 });
+        flight.current = gsap
+          .timeline()
+          // The ghost fades in over the card, then the card steps aside
+          .to(ghost, { opacity: 1, duration: 0.18, ease: "none" }, 0)
+          .add(() => card.classList.add("is-open"), 0.18)
+          .to(ghost, { ...box(bigTerm), duration: 0.8, ease: "expo.inOut" }, 0.06)
+          // It has arrived: the real terminal fades in on top of it
+          .to(dMedia, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.82)
+          .set(ghost, { display: "none" }, 1.14);
+      } else {
+        gsap.fromTo(dMedia, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" });
+      }
       gsap.fromTo(
         dBody.children,
         { y: 34, opacity: 0 },
@@ -151,6 +193,12 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       aria-labelledby="detail-title"
     >
       <div className="detail-scrim" id="detail-scrim" ref={scrimRef} onClick={close} />
+      <span className="term detail-ghost" ref={ghostRef} aria-hidden="true">
+        <span className="term-in">
+          <span className="term-tab" />
+          <span className="term-body" />
+        </span>
+      </span>
       <button type="button" className="btn btn-ghost btn-sm detail-close" id="detail-close" ref={closeRef} onClick={close}>
         {labels.close}
       </button>

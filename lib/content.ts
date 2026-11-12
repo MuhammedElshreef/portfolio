@@ -447,3 +447,52 @@ export const footer = {
   arabicAka: "محمد خالد السيد · محمد الشريف",
   backToTop: "Back to top",
 };
+
+// The command palette: the header search box (Ctrl/Cmd K)
+export const palette = {
+  open: "Search",
+  shortcut: "Ctrl K",
+  label: "Command palette",
+  placeholder: "Search sections, projects, actions",
+  empty: "Nothing matches. Try a section or a project name.",
+  groups: { sections: "Go to", projects: "Projects", actions: "Actions" },
+  sectionKind: "section",
+  hints: ["↑↓ move", "↵ choose", "esc close"],
+  copyEmail: "Copy email address",
+  copied: "Email address copied",
+  copyFailed: "Could not copy. The address is in the Contact section.",
+  downloadCv: "Open CV",
+  openGithub: "Open GitHub",
+  emailKind: "contact",
+  cvKind: "pdf",
+  linkKind: "link",
+};
+
+// How I work, shown as a deploy pipeline
+export const workflow = {
+  title: "How I work",
+  note: "4 steps, start to launch",
+  states: { wait: "queued", run: "running", ok: "passed" },
+  steps: [
+    {
+      name: "Plan",
+      text: "We agree on what to build, who it is for and what done means.",
+      log: "scope · data model · timeline",
+    },
+    {
+      name: "Build",
+      text: "Back end first, then the interface, with a working link you can open every week.",
+      log: "laravel api · vue, angular or react",
+    },
+    {
+      name: "Ship",
+      text: "Tested, deployed to your domain and handed over with everything you need to run it.",
+      log: "tests · deploy · handover",
+    },
+    {
+      name: "Support",
+      text: "Fixes and small changes after launch, so it keeps working as you grow.",
+      log: "fixes · updates",
+    },
+  ],
+};

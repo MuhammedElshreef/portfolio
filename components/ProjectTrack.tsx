@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { ScrollTrigger } from "@/lib/gsap";
-import { clamp, finePointer, fontsReady, prefersReducedMotion, store } from "@/lib/store";
+import { clamp, finePointer, fontsReady, onViewportResize, prefersReducedMotion, store } from "@/lib/store";
 import Terminal, { type TerminalLabels, type TerminalProject } from "./Terminal";
 
 type Labels = { open: string; terminal: TerminalLabels };
@@ -136,7 +136,7 @@ export default function ProjectTrack({
       rz = window.setTimeout(setup, 160);
     };
     listen(window, "scroll", kick, { passive: true });
-    listen(window, "resize", onResize);
+    offs.push(onViewportResize(onResize));
     listen(wide, "change", setup);
     listen(track, "scroll", onSwipe, { passive: true });
     listen(track, "focusin", onFocus);

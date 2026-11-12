@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { ScrollTrigger } from "@/lib/gsap";
-import { clamp, compactSkills, prefersReducedMotion, store } from "@/lib/store";
+import { clamp, compactSkills, onViewportResize, prefersReducedMotion, store } from "@/lib/store";
 
 /*
   Native scrolling: in-page links glide to their section, the nav's scrolled and hide
@@ -105,7 +105,7 @@ export default function SmoothScroll() {
       lastS = s;
     }
     addEventListener("scroll", update, { passive: true });
-    addEventListener("resize", computeAnchors);
+    const offResize = onViewportResize(computeAnchors);
     ScrollTrigger.addEventListener("refresh", computeAnchors);
 
     const refresh = () => ScrollTrigger.refresh();
@@ -126,7 +126,7 @@ export default function SmoothScroll() {
       mounted = false;
       document.removeEventListener("click", onClick);
       removeEventListener("scroll", update);
-      removeEventListener("resize", computeAnchors);
+      offResize();
       removeEventListener("load", refresh);
       cancelAnimationFrame(refreshRaf);
       ScrollTrigger.removeEventListener("refresh", computeAnchors);

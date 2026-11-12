@@ -1,6 +1,8 @@
 import { Fragment } from "react";
+import CommandPalette from "@/components/CommandPalette";
 import CursorBubble from "@/components/CursorBubble";
 import ExperienceLedger, { type LedgerRow } from "@/components/ExperienceLedger";
+import FooterWordmark from "@/components/FooterWordmark";
 import Grain from "@/components/Grain";
 import HeroHint from "@/components/HeroHint";
 import HeroTitle from "@/components/HeroTitle";
@@ -9,6 +11,7 @@ import KineticEmail from "@/components/KineticEmail";
 import Magnetic from "@/components/Magnetic";
 import Marquee from "@/components/Marquee";
 import ParticleSky from "@/components/ParticleSky";
+import Pipeline from "@/components/Pipeline";
 import Portrait from "@/components/Portrait";
 import ProjectDetail from "@/components/ProjectDetail";
 import ProjectTrack from "@/components/ProjectTrack";
@@ -23,11 +26,13 @@ import {
   hero,
   intro,
   nav,
+  palette,
   projects,
   seo,
   skills,
   statement,
   work,
+  workflow,
   type Project,
   type RichText,
 } from "@/lib/content";
@@ -62,8 +67,16 @@ const ledger: LedgerRow[] = [
     company: experience.education.institution,
     color: "var(--acc)",
     current: true,
+    study: true,
     description: experience.education.description,
   },
+];
+
+// Everything the command palette can jump to, in page order
+const paletteSections = [
+  ...nav.links.filter((l) => l.href !== "#contact"),
+  { title: workflow.title, href: "#process" },
+  ...nav.links.filter((l) => l.href === "#contact"),
 ];
 
 const github = contact.socials.find((s) => s.title === "GitHub") ?? contact.socials[0];
@@ -94,6 +107,14 @@ export default function Home() {
               </a>
             ))}
           </nav>
+          <button type="button" className="nav-search" id="palette-open" aria-label={`${palette.open} (${palette.shortcut})`}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M10.5 10.5 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            <span>{palette.open}</span>
+            <kbd>{palette.shortcut}</kbd>
+          </button>
           <a className="btn btn-acc btn-sm" href={nav.cta.href} data-scroll="" data-magnetic="">
             {nav.cta.title}
           </a>
@@ -137,7 +158,7 @@ export default function Home() {
 
         <ProjectTrack projects={trackProjects} labels={{ open: work.open, terminal: work.terminal }}>
           <div className="wrap work-head">
-            <h2 className="work-label" id="work-title">
+            <h2 className="work-label" id="work-title" data-decode="">
               {work.title}
             </h2>
             <p className="work-note">{work.note}</p>
@@ -146,7 +167,7 @@ export default function Home() {
 
         <SkillsSphere tags={sphereTags} groups={skills.groups} listLabel={skills.listLabel}>
           <div className="wrap skills-head">
-            <h2 className="h2" id="skills-title" data-rise="">
+            <h2 className="h2" id="skills-title" data-rise="" data-decode="">
               {skills.title}
             </h2>
             <ul className="legend" aria-label={skills.legendLabel} data-rise="">
@@ -162,7 +183,7 @@ export default function Home() {
         <section id="about" className="wrap about" aria-labelledby="about-title">
           <Portrait src="/me.jpg" alt={about.photoAlt} />
           <div className="about-text glass">
-            <h2 className="h2" id="about-title" data-rise="">
+            <h2 className="h2" id="about-title" data-rise="" data-decode="">
               {about.heading}
             </h2>
             {about.paragraphs.map((p, i) => (
@@ -174,10 +195,22 @@ export default function Home() {
         </section>
 
         <section id="experience" className="wrap exp" aria-labelledby="exp-title">
-          <h2 className="h2" id="exp-title" data-rise="">
+          <h2 className="h2" id="exp-title" data-rise="" data-decode="">
             {experience.title}
           </h2>
           <ExperienceLedger rows={ledger} nowLabel={experience.currentBadge} />
+        </section>
+
+        <section id="process" className="wrap proc" aria-labelledby="proc-title">
+          <div className="proc-head">
+            <h2 className="h2" id="proc-title" data-rise="" data-decode="">
+              {workflow.title}
+            </h2>
+            <p className="proc-note" data-rise="">
+              {workflow.note}
+            </p>
+          </div>
+          <Pipeline steps={workflow.steps} states={workflow.states} />
         </section>
 
         <section id="contact" className="contact" aria-labelledby="contact-title">
@@ -202,14 +235,11 @@ export default function Home() {
               </a>
             </div>
           </div>
+          <div className="wrap">
+            <FooterWordmark text={footer.handle} />
+          </div>
           <footer className="foot wrap">
-            <span className="foot-copy">
-              {footer.copyright}
-              <span className="foot-sig">
-                {footer.handle}
-                <span className="term-cur" aria-hidden="true" />
-              </span>
-            </span>
+            <span className="foot-copy">{footer.copyright}</span>
             <span className="foot-names" lang="ar" dir="rtl">
               <span className="foot-ar">{seo.arabicName}</span>
               <span className="foot-aka">{footer.arabicAka}</span>
@@ -224,6 +254,14 @@ export default function Home() {
       <ProjectDetail
         projects={detailProjects}
         labels={{ close: work.close, noLink: work.noLink, terminal: work.terminal }}
+      />
+      <CommandPalette
+        sections={paletteSections}
+        projects={trackProjects}
+        email={contact.email}
+        cvUrl={contact.cv.url}
+        githubUrl={github.url}
+        labels={palette}
       />
       <CursorBubble label={work.bubble} />
       <Magnetic />

@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap } from "@/lib/gsap";
+import { decode } from "@/lib/decode";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/store";
 
-/** Page-wide scroll reveals: the statement lights up word by word, [data-rise] blocks rise in */
+/** Page-wide scroll reveals: the statement lights up word by word, [data-rise] blocks rise in, [data-decode] headings settle out of code characters */
 export default function ScrollReveals() {
   useEffect(() => {
     if (prefersReducedMotion()) return;
+    const stops: (() => void)[] = [];
     const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>("[data-decode]").forEach((el) =>
+        ScrollTrigger.create({ trigger: el, start: "top 88%", once: true, onEnter: () => stops.push(decode(el)) }),
+      );
       gsap.fromTo(
         ".sw",
         { opacity: 0.12 },
@@ -29,7 +34,10 @@ export default function ScrollReveals() {
         }),
       );
     });
-    return () => ctx.revert();
+    return () => {
+      stops.forEach((stop) => stop());
+      ctx.revert();
+    };
   }, []);
   return null;
 }

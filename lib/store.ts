@@ -19,6 +19,8 @@ export const store = {
   kineticOn: false,
   /** The intro is holding the scroll */
   introActive: false,
+  /** The splash still covers the page, so the sky skips its work behind it */
+  introCover: false,
   /** Set by the particle sky while its loop sleeps; wakes it when the page needs it again */
   skyWake: null as (() => void) | null,
   detailOpen: false,
@@ -33,8 +35,50 @@ export const prefersReducedMotion = () =>
 export const COMPACT_SKILLS_MQ = "(max-width: 760px), (pointer: coarse)";
 export const compactSkills = () => matchMedia(COMPACT_SKILLS_MQ).matches;
 
-/** Holds the page still (intro). Native scroll, so this is plain overflow on <html> */
-export const lockScroll = (on: boolean) => document.documentElement.classList.toggle("scroll-lock", on);
+/*
+  Holds the page still (intro) by swallowing scroll input. The scrollbar stays where it
+  is, so nothing shifts or blinks when the hold ends.
+*/
+const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
+const stopScroll = (e: Event) => e.preventDefault();
+const stopScrollKeys = (e: KeyboardEvent) => {
+  if (SCROLL_KEYS.has(e.key)) e.preventDefault();
+};
+export const lockScroll = (on: boolean) => {
+  if (on) {
+    addEventListener("wheel", stopScroll, { passive: false });
+    addEventListener("touchmove", stopScroll, { passive: false });
+    addEventListener("keydown", stopScrollKeys);
+  } else {
+    removeEventListener("wheel", stopScroll);
+    removeEventListener("touchmove", stopScroll);
+    removeEventListener("keydown", stopScrollKeys);
+  }
+};
+
+/**
+ * A resize listener that ignores a phone's address bar showing or hiding (a height-only
+ * change on a touch screen), which would otherwise re-measure the page mid-scroll.
+ * Returns the function that removes it.
+ */
+export function onViewportResize(fn: () => void) {
+  let w = innerWidth;
+  const coarse = matchMedia("(pointer: coarse)");
+  const handler = () => {
+    if (coarse.matches && innerWidth === w) return;
+    w = innerWidth;
+    fn();
+  };
+  addEventListener("resize", handler);
+  return () => removeEventListener("resize", handler);
+}
+
+/** Resolves once the particle sky has built itself (or given up), so the splash can start on a quiet main thread */
+let skyDone: () => void = () => {};
+export const skyReady = new Promise<void>((resolve) => {
+  skyDone = resolve;
+});
+export const markSkyReady = () => skyDone();
 
 export const finePointer = () =>
   matchMedia("(hover: hover) and (pointer: fine)").matches;
