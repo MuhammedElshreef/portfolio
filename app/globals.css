@@ -1,8 +1,8 @@
 /* Constellation. Deep Mediterranean night.
    Layout: a light-stream </> splash, fixed particle sky behind the top of the page, hero
    written in particles, statement over a code glyph, a horizontal projects track, skills
-   sphere inside a particle globe (desktop), duotone portrait, experience ledger rows,
-   a marquee and a giant kinetic email line.
+   sphere inside a particle globe (desktop), a portrait that settles out of dots, experience
+   ledger rows, a contact headline that builds itself and a giant kinetic email line.
    Performance: native scroll, no backdrop-filter except a light one on the desktop nav
    (panels over the WebGL canvas would re-blur every frame), will-change only on things
    that animate continuously.
@@ -305,7 +305,6 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
   position: absolute; right: 16px; bottom: 8px; pointer-events: none;
   font: 800 54px/1 var(--display); letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 1px rgb(var(--acc-rgb) / 0.35);
 }
-.work.track-on .term-num { transform: translateX(calc(var(--px, 0) * -18px)); }
 .term-big { --t: 42px; --k: 18px; min-height: 0; }
 .term-big .term-tab { font-size: 13px; padding-inline: 20px; }
 .term-big .term-body { padding: 22px 24px 20px; gap: 8px; font-size: 13.5px; }
@@ -444,13 +443,25 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
 
 /* ---------- About ---------- */
 .about { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 5vw, 80px); align-items: center; padding-block: clamp(96px, 14vw, 180px) clamp(60px, 8vw, 110px); }
-.photo { position: relative; aspect-ratio: 834 / 853; border-radius: var(--r); overflow: hidden; background: linear-gradient(160deg, var(--acc-hi), var(--acc-lo) 70%, var(--night)); --mx: -999px; --my: -999px; cursor: crosshair; }
-.photo img { position: absolute; inset: -6% 0; width: 100%; height: 112%; object-fit: cover; }
-.photo-base { filter: grayscale(1) contrast(1.15) brightness(0.95); mix-blend-mode: multiply; }
-.photo-color { -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 35%, transparent 100%); mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 35%, transparent 100%); }
-.photo.full .photo-color { -webkit-mask-image: none; mask-image: none; }
-.photo:focus-visible { outline: 2px solid var(--acc); outline-offset: 4px; border-radius: var(--r); }
-.photo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(var(--text-rgb) / 0.14); pointer-events: none; }
+/* The portrait in its real colours, inside four corner marks. The canvas draws the dots it
+   arrives as (their colour is the canvas text colour); the photo stays hidden until they land. */
+.photo { position: relative; padding: 10px; }
+.photo-box { position: relative; aspect-ratio: 834 / 853; border-radius: var(--r); overflow: hidden; }
+.photo-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.photo-box canvas { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--acc); pointer-events: none; }
+.motion .photo:not(.is-in) .photo-box img { opacity: 0; }
+.photo-c { position: absolute; width: 22px; height: 22px; border: 2px solid var(--acc); transition: translate 0.5s var(--ease); }
+.photo-c.tl { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+.photo-c.tr { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+.photo-c.bl { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+.photo-c.br { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+@media (hover: hover) {
+  .photo:hover .photo-box img { transform: scale(1.04); }
+  .photo:hover .tl { translate: 5px 5px; }
+  .photo:hover .tr { translate: -5px 5px; }
+  .photo:hover .bl { translate: 5px -5px; }
+  .photo:hover .br { translate: -5px -5px; }
+}
 .about-text { padding: clamp(26px, 4vw, 52px); display: grid; gap: 18px; }
 .about-text .h2 { font-size: clamp(2.3rem, 5vw, 4.4rem); }
 .about-text p { color: var(--muted); font-size: 17.5px; max-width: 58ch; }
@@ -550,13 +561,19 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
   .ptext { max-width: none; }
 }
 
-/* ---------- Contact: marquee and giant email ---------- */
+/* ---------- Contact: a headline that builds itself, and the giant email ---------- */
 .contact { position: relative; padding-top: clamp(80px, 12vw, 160px); overflow: hidden; }
-.marquee { overflow: hidden; padding-block: 12px; border-block: 1px solid var(--line); }
-.marquee-row { display: flex; width: max-content; will-change: transform; }
-.mq-group { display: flex; align-items: center; gap: 0.45em; padding-right: 0.45em; font: 800 clamp(3.2rem, 9.5vw, 9.6rem)/1.15 var(--display); letter-spacing: -0.04em; white-space: nowrap; }
-.mq-out { color: transparent; -webkit-text-stroke: 1.5px var(--text); }
-.mq-sep { flex: none; width: 0.16em; height: 0.16em; border-radius: 50%; background: var(--acc); box-shadow: 0 0 24px rgb(var(--acc-rgb) / 0.6); }
+/* Sized from the column width so the sentence always fills one line (two on narrow
+   screens). A letter without .in is still loose: outlined, and placed by JS. */
+.asm-wrap { container-type: inline-size; }
+.asm { font: 800 10.6cqw/1 var(--display); letter-spacing: -0.045em; white-space: nowrap; }
+.asm .ch { display: inline-block; color: var(--text); -webkit-text-stroke: 1.5px transparent; transition: color 0.5s, -webkit-text-stroke-color 0.5s; }
+.asm .ch:not(.in) { color: transparent; -webkit-text-stroke-color: var(--acc-line); will-change: transform; }
+.asm .acc .ch.in { color: var(--acc); }
+@container (max-width: 620px) {
+  .asm { font-size: 19cqw; white-space: normal; }
+  .asm-row { display: block; }
+}
 .contact-in { padding-block: clamp(56px, 8vw, 110px) clamp(48px, 6vw, 80px); }
 .contact-sub { font-size: clamp(18px, 1.6vw, 22px); color: var(--muted); max-width: 44ch; }
 .contact-mail { margin-top: 28px; font-family: var(--display); line-height: 1.05; white-space: nowrap; font-size: 6vw; letter-spacing: -0.035em; }
@@ -616,7 +633,6 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
   .exp { padding-block: var(--sec); }
 
   .contact { padding-top: var(--sec); }
-  .mq-group { font-size: clamp(2.6rem, 12vw, 3.4rem); }
   .contact-in { padding-block: 36px var(--sec); }
   .contact-sub { font-size: 17px; }
   .contact-mail { margin-top: 20px; }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { ProjectLink } from "@/lib/content";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion, store } from "@/lib/store";
@@ -79,8 +80,10 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
       moving(false);
       setBackdropInert(false);
       card?.classList.remove("is-open");
+      // Hide the panel before the tween styles are cleared. Cleared while it is still
+      // shown, the scrim and the terminal go back to full strength for one frame.
+      flushSync(() => setIdx(-1));
       gsap.set(parts, { clearProps: "all" });
-      setIdx(-1);
       lastFocus.current?.focus?.({ preventScroll: true });
     };
     if (prefersReducedMotion()) {

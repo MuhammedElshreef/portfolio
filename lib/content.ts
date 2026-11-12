@@ -376,7 +376,6 @@ export const contact = {
   email: "muhammedelshreef50@gmail.com",
   cv: { title: "CV", url: "/Muhammed-Alsayed-CV.pdf" },
   socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
-  marquee: "Let's build something",
   send: "Send email",
 };
 

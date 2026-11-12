@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import AssembleLine from "@/components/AssembleLine";
 import CommandPalette from "@/components/CommandPalette";
 import CursorBubble from "@/components/CursorBubble";
 import ExperienceLedger, { type LedgerRow } from "@/components/ExperienceLedger";
@@ -9,7 +10,6 @@ import HeroTitle from "@/components/HeroTitle";
 import Intro from "@/components/Intro";
 import KineticEmail from "@/components/KineticEmail";
 import Magnetic from "@/components/Magnetic";
-import Marquee from "@/components/Marquee";
 import ParticleSky from "@/components/ParticleSky";
 import Pipeline from "@/components/Pipeline";
 import Portrait from "@/components/Portrait";
@@ -217,7 +217,9 @@ export default function Home() {
           <h2 className="sr-only" id="contact-title">
             {contact.title}
           </h2>
-          <Marquee text={contact.marquee} />
+          <div className="wrap asm-wrap">
+            <AssembleLine text={contact.heading} />
+          </div>
           <div className="wrap contact-in">
             <p className="contact-sub" data-rise="">
               {contact.subheading}

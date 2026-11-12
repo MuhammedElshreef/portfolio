@@ -11,8 +11,10 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 /*
   Projects as a horizontal track. On wide screens the section holds still (CSS sticky)
-  while scrolling down slides the cards sideways, eased a little so it glides, with a
-  slight parallax on each card's big number. Each card is a terminal whose command
+  while scrolling down slides the cards sideways. The track follows the scroll position
+  on a soft spring, so separate wheel notches blend into one glide, and the spring is
+  stepped by real time, so it feels the same on a 60Hz and a 144Hz screen. Only the
+  track's transform changes while it moves. Each card is a terminal whose command
   types itself out the first time it comes into view. Narrow screens, touch and reduced
   motion get a plain swipe row that snaps to each card. Clicking a card opens the detail view.
 */
@@ -59,34 +61,64 @@ export default function ProjectTrack({
       cards.forEach((c) => seenIO!.observe(c));
     } else cards.forEach((c) => c.classList.add("is-seen"));
 
+    // Written only when the value changes: a text write every frame costs a layout
+    let barP = -1,
+      numN = 0;
     const setProgress = (p: number) => {
-      bar.style.transform = `scaleX(${p.toFixed(4)})`;
-      num.textContent = pad(Math.min(cards.length, 1 + Math.round(p * (cards.length - 1))));
+      if (Math.abs(p - barP) > 0.0004) {
+        barP = p;
+        bar.style.transform = `scaleX(${p.toFixed(4)})`;
+      }
+      const n = Math.min(cards.length, 1 + Math.round(p * (cards.length - 1)));
+      if (n !== numN) {
+        numN = n;
+        num.textContent = pad(n);
+      }
     };
 
     // ---------- Wide screens: vertical scroll drives the track ----------
+    // GLIDE is roughly how long, in seconds, the track takes to catch up with the scroll
+    const GLIDE = 0.22;
     let on = false,
       dist = 0,
       room = 1,
       top0 = 0,
-      shown = -1,
+      x = -1,
+      vel = 0,
+      last = 0,
       raf = 0,
       centres: number[] = [];
-    function tick() {
+    function tick(now: number) {
       raf = 0;
       if (!on) return;
-      const target = clamp((window.scrollY - top0) / room, 0, 1);
-      shown = shown < 0 ? target : shown + (target - shown) * 0.16;
-      if (Math.abs(target - shown) < 0.0005) shown = target;
-      const x = shown * dist;
-      track.style.transform = `translate3d(${(-x).toFixed(1)}px,0,0)`;
-      const vw = stick.clientWidth;
-      cards.forEach((c, i) => c.style.setProperty("--px", clamp((centres[i] - x) / vw - 0.5, -1, 1).toFixed(3)));
-      setProgress(shown);
-      if (shown !== target) raf = requestAnimationFrame(tick);
+      const target = clamp((window.scrollY - top0) / room, 0, 1) * dist;
+      if (x < 0) {
+        x = target;
+        vel = 0;
+      } else {
+        // A critically damped spring: it speeds up and slows down gradually and never overshoots
+        const dt = clamp((now - last) / 1000, 0.001, 0.05);
+        const w = 2 / GLIDE,
+          k = w * dt,
+          decay = 1 / (1 + k + 0.48 * k * k + 0.235 * k * k * k),
+          gap = x - target,
+          push = (vel + w * gap) * dt;
+        vel = (vel - w * push) * decay;
+        x = target + (gap + push) * decay;
+        if (Math.abs(target - x) < 0.1 && Math.abs(vel) < 2) {
+          x = target;
+          vel = 0;
+        }
+      }
+      last = now;
+      track.style.transform = `translate3d(${(-x).toFixed(2)}px,0,0)`;
+      setProgress(dist ? x / dist : 0);
+      if (x !== target) raf = requestAnimationFrame(tick);
     }
     const kick = () => {
-      if (on && !raf) raf = requestAnimationFrame(tick);
+      if (!on || raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
     };
     function setup() {
       on = !RM && wide.matches;
@@ -96,7 +128,6 @@ export default function ProjectTrack({
       if (!on) {
         section!.style.height = "";
         track.style.transform = "";
-        cards.forEach((c) => c.style.removeProperty("--px"));
         onSwipe();
       } else {
         dist = Math.max(0, track.offsetWidth - stick.clientWidth);
@@ -104,8 +135,8 @@ export default function ProjectTrack({
         room = Math.max(1, section!.offsetHeight - stick.offsetHeight);
         centres = cards.map((c) => c.offsetLeft + c.offsetWidth / 2);
         top0 = section!.getBoundingClientRect().top + window.scrollY;
-        shown = -1;
-        tick();
+        x = -1;
+        tick(performance.now());
       }
       // The sections below move when this one changes height
       ScrollTrigger.refresh();
