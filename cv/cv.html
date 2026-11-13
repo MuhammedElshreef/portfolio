@@ -1,0 +1,168 @@
+<!doctype html>
+<!--
+  Source of public/Muhammed-Alsayed-CV.pdf. Edit this file, then make the PDF again with:
+    node cv/build.mjs
+  The layout copies the original Canva export: Inter, 11pt text, dark warm grey, thin rules.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Muhammed Khaled Alsayed - CV</title>
+<style>
+  /* One fixed-weight file per weight. A variable font would be stored in the PDF as drawn
+     shapes; these are stored as real fonts, which is smaller and reads better everywhere. */
+  @font-face { font-family: "Inter"; font-weight: 400; src: url("https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 600; src: url("https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 700; src: url("https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-700-normal.woff2") format("woff2"); }
+  @page { size: 595.5pt 842.25pt; margin: 30pt 37.5pt 24pt; }
+  * { box-sizing: border-box; }
+  html { font: 400 11pt/14.3pt "Inter", Arial, sans-serif; color: #3c3132; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; }
+  h1, h2, h3, p, ul { margin: 0; padding: 0; }
+  a { color: inherit; }
+  header { text-align: center; }
+  h1 { font: 700 25pt/31pt "Inter", Arial, sans-serif; }
+  .role { font: 700 15pt/19pt "Inter", Arial, sans-serif; }
+  .contact { margin-top: 1pt; }
+  hr { border: 0; border-top: 0.75pt solid #3c3132; margin: 10pt 0 11pt; }
+  header + hr { margin-top: 13pt; }
+  h2 { font: 700 13pt/16pt "Inter", Arial, sans-serif; margin-bottom: 8pt; break-after: avoid; }
+  h3 { font: 600 11pt/14.3pt "Inter", Arial, sans-serif; }
+  .just { text-align: justify; }
+  ul { list-style: none; padding-left: 18.7pt; }
+  li { position: relative; }
+  li::before { content: ""; position: absolute; left: -11.2pt; top: 5.8pt; width: 3pt; height: 3pt; border-radius: 50%; background: #3c3132; }
+  .item { break-inside: avoid; }
+  .item + .item { margin-top: 5pt; }
+  .edu h3 + ul, .lang h3 + ul { margin-top: 1pt; }
+  .job { break-inside: avoid; }
+  .job + .job { margin-top: 9pt; }
+  .job-head { display: flex; justify-content: space-between; gap: 12pt; font-weight: 600; margin-bottom: 6pt; }
+  .job-head a { text-decoration: none; }
+  .proj h3, .skill h3 { font-weight: 700; }
+  .skill + .skill { margin-top: 8pt; }
+  .new-page { break-before: page; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>MUHAMMED KHALED ALSAYED</h1>
+    <p class="role">FULL-STACK DEVELOPER</p>
+    <p class="contact">Tripoli, Libya • +218 92 7784849 • muhammedelshreef50@gmail.com</p>
+    <p><a href="https://alsayed.ly/">alsayed.ly</a></p>
+  </header>
+  <hr>
+
+  <section>
+    <h2>PERSONAL STATEMENT</h2>
+    <p class="just">As a full-stack developer, I'm driven to make a positive impact on the community, interested in programming, open to learning everything about technology, specifically web fields with solid knowledge in both front-end and back-end development, and a fast self-learner. I believe in knowledge transfer and can easily collaborate and share knowledge with my colleagues and learn from them.</p>
+  </section>
+  <hr>
+
+  <section class="lang">
+    <h2>LANGUAGES</h2>
+    <div class="item"><h3>Arabic</h3><ul><li>Native language</li></ul></div>
+    <div class="item"><h3>English</h3><ul><li>Intermediate</li></ul></div>
+  </section>
+  <hr>
+
+  <section class="edu">
+    <h2>EDUCATION</h2>
+    <div class="item"><h3>High school certification,Alseraj high school</h3><ul><li>2020 – 2023</li></ul></div>
+    <div class="item"><h3>Bachelor of information technology, University of Tripoli</h3><ul><li>2023 – Present</li></ul></div>
+  </section>
+  <hr>
+
+  <section>
+    <h2>WORK EXPERIENCE</h2>
+
+    <div class="job">
+      <p class="job-head"><span>Full-Stack Developer | Alaman Aljadeed | Tripoli, Libya</span><span>Jul 2026 – Present</span></p>
+      <p class="just">Working at Alaman Aljadeed, a communications and IT solutions company, as a full-stack developer building and supporting the software, apps and systems its clients depend on every day.</p>
+    </div>
+
+    <div class="job">
+      <p class="job-head"><span>Part Time Front end developer | Qader co | Tripoli, Libya</span><span>May 2026 – Present</span></p>
+      <p class="just">Working at Qader co on Turista as part of a team modernizing legacy systems by developing a new, comprehensive platform for resort dashboards and building/apartment management. Turista aims to streamline hospitality and property operations, delivering efficient digital solutions for resort and real estate management.</p>
+    </div>
+
+    <div class="job">
+      <p class="job-head"><span>Full-Stack Developer | Tadamon for <a href="https://libyana.ly/">Libyana</a> | Tripoli, Libya</span><span>Dec 2025 – Jul 2026</span></p>
+      <p class="just">Worked at Tadamon Company as an outsource developer for Libyana, contributing to the development of LibyanaHub, a comprehensive e-learning and fitness coaching platform. LibyanaHub aims to empower Libyan users with access to online courses, professional fitness coaching, and educational content, supporting both Arabic and English to serve users across Libya.</p>
+    </div>
+
+    <div class="job">
+      <p class="job-head"><span>Front-end Developer (Internship) | Mataa | Tripoli, Libya</span><span>Jan 2024 – Apr 2024</span></p>
+      <p class="just">Worked at Mataa Company as part of a team developing the company’s dashboard , Mataa app is the largest shopping application in Libya, specializing in providing original products from renowned international brands. Their goal is to offer the best shopping experience to customers across all Libyan cities.</p>
+    </div>
+  </section>
+
+  <!-- Projects open the second page, so there is no rule above them -->
+  <section class="new-page">
+    <h2>PROJECTS</h2>
+
+    <div class="item proj">
+      <h3>LibyanaHub Platform</h3>
+      <ul><li class="just">A comprehensive e-learning and fitness coaching platform for the Libyan market. Features course enrollment, fitness coach subscriptions with tiered pricing, admin dashboard, and full Arabic/English bilingual support with RTL layout.</li></ul>
+    </div>
+    <div class="item proj">
+      <h3>LibyanaHub Collab</h3>
+      <ul><li class="just">A core module of the LibyanaHub platform, built in collaboration with medical students to track and monitor patient health. Features patient record management, medical history tracking, and streamlined communication between healthcare providers.</li></ul>
+    </div>
+    <div class="item proj">
+      <h3>Elzwetina Group</h3>
+      <ul>
+        <li class="just">Corporate website for Libya's leading industrial and safety solutions provider. A full-stack Laravel app with product showcase, brand partnerships, client portfolio, contact system with email notifications, and a Filament-powered admin panel.</li>
+        <li>Visit Website: <a href="https://elzwetinagroup.com/">elzwetinagroup.com</a></li>
+      </ul>
+    </div>
+    <div class="item proj">
+      <h3>Orders Management System</h3>
+      <ul><li class="just">A full-featured business order and invoice management system covering the complete order lifecycle. Includes customer/product management, invoice generation with PDF export, partial payment tracking, and a real-time financial analytics dashboard.</li></ul>
+    </div>
+    <div class="item proj">
+      <h3>Weather Now</h3>
+      <ul>
+        <li class="just">Real-time weather app with location search, 7-day forecasts, hourly temperature trends, and metric/imperial unit support. Built as a Frontend Mentor challenge.</li>
+        <li>Visit Website: <a href="https://weather-now-mentor.vercel.app/">weather-now-mentor.vercel.app</a></li>
+      </ul>
+    </div>
+    <div class="item proj">
+      <h3>Alkhidmat Albarmajia</h3>
+      <ul>
+        <li class="just">A modern, responsive website for a Libyan tech services company. Built as a freelancer using Astro with a custom Vue component.</li>
+        <li>Visit Website: <a href="https://kbtech.ly/">kbtech.ly</a></li>
+      </ul>
+    </div>
+    <div class="item proj">
+      <h3>Telegram News Bot</h3>
+      <ul><li class="just">Automated Telegram bot that aggregates financial/forex news from RSS feeds, translates articles to Arabic via Lingva API, and delivers them to a Telegram channel. Uses MongoDB to track sent articles and avoid duplicates.</li></ul>
+    </div>
+    <div class="item proj">
+      <h3>Libya Roots</h3>
+      <ul>
+        <li class="just">Tourism Platform showcasing Libya’s culture and historical landmarks. Users explore categorized destinations, View locations on maps, and save favorites. University project (ITGS303)</li>
+        <li>Visit Website: <a href="https://libya-roots.vercel.app/">libya-roots.vercel.app</a></li>
+        <li>View Source: <a href="https://github.com/MuhammedElshreef/libya-roots">github.com/MuhammedElshreef/libya-roots</a></li>
+      </ul>
+    </div>
+  </section>
+  <hr>
+
+  <section>
+    <h2>SKILLS</h2>
+    <div class="item skill">
+      <h3>Frontend</h3>
+      <ul><li>HTML5, CSS3, Tailwind CSS</li><li>JavaScript, TypeScript</li><li>Vue.js, Nuxt.js, Angular, Astro</li></ul>
+    </div>
+    <div class="item skill">
+      <h3>Backend</h3>
+      <ul><li>PHP, Laravel, Filament, Livewire, REST APIs</li><li>Node.js</li><li>MySQL, MongoDB</li></ul>
+    </div>
+    <div class="item skill">
+      <h3>Tools &amp; Version Control</h3>
+      <ul><li>Git, GitHub, Vite</li></ul>
+    </div>
+  </section>
+</body>
+</html>

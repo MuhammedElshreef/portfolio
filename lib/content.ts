@@ -123,11 +123,11 @@ export const experience = {
       company: "Libyana",
       companyUrl: "https://libyana.ly",
       color: "#951B81",
-      date: "Jul 2025 - Dec 2025",
-      from: "Jul 2025",
-      to: "Dec 2025",
+      date: "Dec 2025 - Jul 2026",
+      from: "Dec 2025",
+      to: "Jul 2026",
       description:
-        "Building Libyana Hub, the digital platform of Libya's leading mobile network operator. Full-time, via Tadamon.",
+        "Built Libyana Hub, the digital platform of Libya's leading mobile network operator. Full-time, via Tadamon.",
     },
     {
       role: "Intern",
