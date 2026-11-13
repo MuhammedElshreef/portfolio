@@ -8,9 +8,10 @@ export type TerminalLabels = {
   status: string;
   live: string;
   private: string;
+  soon: string;
 };
 
-export type TerminalProject = { slug: string; title: string; kind?: string; techs: string[]; live: boolean };
+export type TerminalProject = { slug: string; title: string; kind?: string; techs: string[]; live: boolean; soon?: boolean };
 
 // The tab's file extension follows the project's main framework
 function extension(techs: string[]) {
@@ -73,7 +74,9 @@ export default function Terminal({
             <span>{labels.stack}</span>
             <span>{techs.join(", ").toLowerCase()}</span>
             <span>{labels.status}</span>
-            <span className={p.live ? "term-ok" : undefined}>{p.live ? `● ${labels.live}` : `○ ${labels.private}`}</span>
+            <span className={p.live ? "term-ok" : undefined}>
+              {p.live ? `● ${labels.live}` : p.soon ? `◌ ${labels.soon}` : `○ ${labels.private}`}
+            </span>
           </span>
           <span className="term-line term-last">
             <b>{labels.prompt}</b>

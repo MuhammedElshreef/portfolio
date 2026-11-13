@@ -43,8 +43,16 @@ const featured = projects.featured
   .map((slug) => allProjects.find((p) => p.slug === slug))
   .filter((p): p is Project => Boolean(p));
 
-const trackProjects = featured.map(({ slug, title, kind, techs, links }) => ({ slug, title, kind, techs, live: links.length > 0 }));
-const detailProjects = featured.map(({ slug, title, kind, description, techs, links }) => ({ slug, title, kind, description, techs, links }));
+const trackProjects = featured.map(({ slug, title, kind, techs, links, soon }) => ({ slug, title, kind, techs, live: links.length > 0, soon }));
+const detailProjects = featured.map(({ slug, title, kind, description, techs, links, soon }) => ({
+  slug,
+  title,
+  kind,
+  description,
+  techs,
+  links,
+  soon,
+}));
 
 const groupOf = (name: string) => skills.groups.find((g) => (g.items as string[]).includes(name))?.key ?? "tl";
 const sphereTags = skills.sphereOrder.map((name) => ({ name, key: groupOf(name) }));
@@ -80,6 +88,7 @@ const paletteSections = [
 ];
 
 const github = contact.socials.find((s) => s.title === "GitHub") ?? contact.socials[0];
+const linkedin = contact.socials.find((s) => s.title === "LinkedIn");
 
 function Rich({ text }: { text: RichText }) {
   return text.map((part, i) => (typeof part === "string" ? part : <strong key={i}>{part.strong}</strong>));
@@ -232,6 +241,11 @@ export default function Home() {
               <a className="btn btn-ghost" href={github.url} target="_blank" rel="noopener" data-magnetic="">
                 {github.title}
               </a>
+              {linkedin ? (
+                <a className="btn btn-ghost" href={linkedin.url} target="_blank" rel="noopener" data-magnetic="">
+                  {linkedin.title}
+                </a>
+              ) : null}
               <a className="btn btn-ghost" href={contact.cv.url} target="_blank" rel="noopener" data-magnetic="">
                 {contact.cv.title}
               </a>
@@ -255,7 +269,7 @@ export default function Home() {
 
       <ProjectDetail
         projects={detailProjects}
-        labels={{ close: work.close, noLink: work.noLink, terminal: work.terminal }}
+        labels={{ close: work.close, noLink: work.noLink, soonNote: work.soonNote, terminal: work.terminal }}
       />
       <CommandPalette
         sections={paletteSections}
@@ -263,6 +277,7 @@ export default function Home() {
         email={contact.email}
         cvUrl={contact.cv.url}
         githubUrl={github.url}
+        linkedinUrl={linkedin?.url}
         labels={palette}
       />
       <CursorBubble label={work.bubble} />

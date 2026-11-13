@@ -11,6 +11,8 @@ export type Project = {
   links: ProjectLink[];
   /** What kind of product it is, shown on its terminal card */
   kind?: string;
+  /** Public, but its link is not up yet: shown as launching soon instead of private */
+  soon?: boolean;
 };
 
 // A paragraph with optional bold runs
@@ -94,10 +96,10 @@ export const about = {
       { strong: "Muhammed Khaled Alsayed" },
       ", also known as Muhammed Elshreef, a ",
       { strong: "Full-Stack Web Developer" },
-      " with a passion for creating beautiful and functional web applications. I enjoy learning new technologies, building things, and helping people.",
+      " with hands-on experience building and shipping production web applications, comfortable working on both the front end and the back end.",
     ],
     [
-      "I'm always exploring new tools and ideas. I learn fast, share what I learn, and enjoy collaborating with others to build things that matter.",
+      "I care about clean, maintainable code and interfaces that are simple to use. I learn new tools quickly, work well in a team, and enjoy sharing what I know with the people I work with.",
     ],
   ] satisfies RichText[],
   photoAlt: "Portrait of Muhammed Alsayed",
@@ -109,14 +111,26 @@ export const experience = {
   title: "Experience",
   items: [
     {
-      role: "Front-End Developer",
+      role: "Full-Stack Developer",
+      company: "Alaman Aljadeed",
+      color: "#16BCC8",
+      date: "Jul 2026 - Present",
+      from: "Jul 2026",
+      to: "Present",
+      current: true,
+      description:
+        "Full-stack development on Alaman Aljadeed's own products, including Aamin, and on applications for its clients.",
+    },
+    {
+      role: "Part-Time Front-end Developer",
       company: "Qader co",
       color: "#37BC69",
       date: "May 2026 - Present",
       from: "May 2026",
       to: "Present",
       current: true,
-      description: "Part-time front-end development.",
+      description:
+        "Part-time front-end development on Turista, a new platform for resort dashboards and building and apartment management that replaces legacy systems.",
     },
     {
       role: "Full-Stack Developer",
@@ -130,7 +144,7 @@ export const experience = {
         "Built Libyana Hub, the digital platform of Libya's leading mobile network operator. Full-time, via Tadamon.",
     },
     {
-      role: "Intern",
+      role: "Front-end Developer (Internship)",
       company: "Mataa",
       companyUrl: "https://mataa.app",
       color: "#F9A61A",
@@ -159,13 +173,13 @@ export const projects = {
   // The ring shows these, in this order
   featured: [
     "libyanahub",
-    "libya-roots",
-    "orders",
-    "kbtech",
+    "records-system",
+    "aamin",
+    "addadi",
+    "alaman",
     "libyanahub-collab",
-    "weather",
-    "elzwetina",
-    "zad-almuslim",
+    "orders",
+    "aamin-ui",
   ],
   items: [
     {
@@ -180,7 +194,7 @@ export const projects = {
     {
       slug: "libyanahub-collab",
       kind: "Patient records",
-      title: "LibyanaHub Collab",
+      title: "LibyanaHub Collab (Tadawee)",
       description:
         "A collaboration between Libyana and medical students to track and monitor patient health: record management, medical history tracking, and streamlined communication between healthcare providers.",
       techs: [
@@ -299,6 +313,54 @@ export const projects = {
         },
       ],
     },
+    {
+      slug: "records-system",
+      kind: "Records and reporting",
+      title: "Records and Statistics System",
+      description:
+        "A registration and reporting system for a Libyan public-sector client, built as a freelancer: 18 admin modules, role-based permissions, an audit log, and Arabic PDF reports, with an automated test suite.",
+      techs: ["Laravel 13", "Filament 5", "PHP 8.3", "Pest", "mPDF"],
+      links: [],
+    },
+    {
+      slug: "aamin",
+      kind: "Product website",
+      title: "Aamin Website",
+      description:
+        "The website for Aamin, a Libyan platform for distributing top-up cards and digital vouchers. Arabic-first with a full RTL layout and an English version, generated as static pages.",
+      techs: ["Nuxt 4", "Vue", "Nuxt i18n", "Leaflet"],
+      links: [],
+      soon: true,
+    },
+    {
+      slug: "addadi",
+      kind: "Product website",
+      title: "Addadi Website",
+      description:
+        "The website for Addadi, the app that tops up a prepaid electricity meter in Libya from a phone. Arabic-first with a full RTL layout and an English version, generated as static pages.",
+      techs: ["Nuxt 4", "Vue", "Nuxt i18n", "Leaflet"],
+      links: [],
+      soon: true,
+    },
+    {
+      slug: "alaman",
+      kind: "Company website",
+      title: "Alaman Aljadeed Website",
+      description:
+        "The company website for Alaman Aljadeed, a communications and IT solutions company. Arabic-first with an English version, a page for every project, and all content edited from one file.",
+      techs: ["Nuxt 4", "Vue", "Tailwind CSS 4", "TypeScript"],
+      links: [],
+      soon: true,
+    },
+    {
+      slug: "aamin-ui",
+      kind: "Design system",
+      title: "Aamin UI Kit",
+      description:
+        "An Arabic, RTL-first design system for dashboards: ready-made layouts and components that other projects install from a shared registry.",
+      techs: ["Vue 3", "TypeScript", "Tailwind CSS 4", "shadcn-vue", "Vite"],
+      links: [],
+    },
   ] satisfies Project[],
 };
 
@@ -327,7 +389,10 @@ export const skills = {
     "Node.js",
     "Astro",
     "MongoDB",
+    "Vite",
     "JavaScript",
+    "REST APIs",
+    "Pest",
   ],
   groups: [
     {
@@ -354,6 +419,7 @@ export const skills = {
         "Laravel",
         "Filament",
         "Livewire",
+        "REST APIs",
         "Node.js",
         "MySQL",
         "MongoDB",
@@ -362,7 +428,7 @@ export const skills = {
     {
       key: "tl" as SkillGroupKey,
       name: "Tools",
-      items: ["Git", "GitHub"],
+      items: ["Git", "GitHub", "Vite", "Pest"],
     },
   ],
 };
@@ -375,7 +441,10 @@ export const contact = {
     "Have a project in mind, a role to fill, or just want to talk web? My inbox is open.",
   email: "muhammedelshreef50@gmail.com",
   cv: { title: "CV", url: "/Muhammed-Alsayed-CV.pdf" },
-  socials: [{ title: "GitHub", url: "https://github.com/MuhammedElshreef" }],
+  socials: [
+    { title: "GitHub", url: "https://github.com/MuhammedElshreef" },
+    { title: "LinkedIn", url: "https://www.linkedin.com/in/muhammed-alsayed-0611bb2a3/" },
+  ],
   send: "Send email",
 };
 
@@ -432,10 +501,12 @@ export const work = {
     status: "status",
     live: "live",
     private: "private",
+    soon: "launching soon",
   },
   bubble: "View",
   close: "Close",
   noLink: "Private client project. No public link yet.",
+  soonNote: "Not public yet. The link will be added here when it launches.",
 };
 
 export const footer = {
@@ -462,6 +533,7 @@ export const palette = {
   copyFailed: "Could not copy. The address is in the Contact section.",
   downloadCv: "Open CV",
   openGithub: "Open GitHub",
+  openLinkedin: "Open LinkedIn",
   emailKind: "contact",
   cvKind: "pdf",
   linkKind: "link",

@@ -7,9 +7,17 @@ import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion, store } from "@/lib/store";
 import Terminal, { type TerminalLabels } from "./Terminal";
 
-export type DetailProject = { slug: string; title: string; kind?: string; description: string; techs: string[]; links: ProjectLink[] };
+export type DetailProject = {
+  slug: string;
+  title: string;
+  kind?: string;
+  description: string;
+  techs: string[];
+  links: ProjectLink[];
+  soon?: boolean;
+};
 
-type Labels = { close: string; noLink: string; terminal: TerminalLabels };
+type Labels = { close: string; noLink: string; soonNote: string; terminal: TerminalLabels };
 
 // Keeps Tab and assistive tech out of the page behind the dialog
 const setBackdropInert = (on: boolean) => {
@@ -230,7 +238,7 @@ export default function ProjectDetail({ projects, labels }: { projects: DetailPr
                   ))}
                 </div>
               ) : (
-                <p className="nolink">{labels.noLink}</p>
+                <p className="nolink">{p.soon ? labels.soonNote : labels.noLink}</p>
               )}
             </>
           )}

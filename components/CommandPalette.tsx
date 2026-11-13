@@ -15,6 +15,7 @@ export type PaletteLabels = {
   copyFailed: string;
   downloadCv: string;
   openGithub: string;
+  openLinkedin: string;
   emailKind: string;
   cvKind: string;
   linkKind: string;
@@ -47,6 +48,7 @@ export default function CommandPalette({
   email,
   cvUrl,
   githubUrl,
+  linkedinUrl,
   labels,
 }: {
   sections: { title: string; href: string }[];
@@ -54,6 +56,7 @@ export default function CommandPalette({
   email: string;
   cvUrl: string;
   githubUrl: string;
+  linkedinUrl?: string;
   labels: PaletteLabels;
 }) {
   const [open, setOpen] = useState(false);
@@ -93,8 +96,11 @@ export default function CommandPalette({
       },
       { key: "cv", group: labels.groups.actions, title: labels.downloadCv, kind: labels.cvKind, href: cvUrl, external: true },
       { key: "github", group: labels.groups.actions, title: labels.openGithub, kind: labels.linkKind, href: githubUrl, external: true },
+      ...(linkedinUrl
+        ? [{ key: "linkedin", group: labels.groups.actions, title: labels.openLinkedin, kind: labels.linkKind, href: linkedinUrl, external: true }]
+        : []),
     ],
-    [sections, projects, email, cvUrl, githubUrl, labels],
+    [sections, projects, email, cvUrl, githubUrl, linkedinUrl, labels],
   );
 
   const shown = useMemo(() => {
