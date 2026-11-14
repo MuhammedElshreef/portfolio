@@ -3,11 +3,14 @@
   Source of public/Muhammed-Alsayed-CV.pdf. Edit this file, then make the PDF again with:
     node cv/build.mjs
   The layout copies the original Canva export: Inter, 11pt text, dark warm grey, thin rules.
+  Kept parser-friendly: one column, real text, standard section names, and bullets drawn
+  inline so every heading is stored right before its own text.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Muhammed Khaled Alsayed - CV</title>
+<title>Muhammed Khaled Alsayed - Full-Stack Developer CV</title>
+<meta name="author" content="Muhammed Khaled Alsayed">
 <style>
   /* One fixed-weight file per weight. A variable font would be stored in the PDF as drawn
      shapes; these are stored as real fonts, which is smaller and reads better everywhere. */
@@ -24,21 +27,26 @@
   h1 { font: 700 25pt/31pt "Inter", Arial, sans-serif; }
   .role { font: 700 15pt/19pt "Inter", Arial, sans-serif; }
   .contact { margin-top: 1pt; }
+  .links a { text-decoration: none; }
   hr { border: 0; border-top: 0.75pt solid #3c3132; margin: 10pt 0 11pt; }
   header + hr { margin-top: 13pt; }
   h2 { font: 700 13pt/16pt "Inter", Arial, sans-serif; margin-bottom: 8pt; break-after: avoid; }
   h3 { font: 600 11pt/14.3pt "Inter", Arial, sans-serif; }
   .just { text-align: justify; }
   ul { list-style: none; padding-left: 18.7pt; }
-  li { position: relative; }
-  li::before { content: ""; position: absolute; left: -11.2pt; top: 5.8pt; width: 3pt; height: 3pt; border-radius: 50%; background: #3c3132; }
+  /* Drawn inline, not absolutely positioned: a positioned bullet makes Chrome store the
+     list text after every heading on the page, and a parser then pairs them wrongly. */
+  li::before { content: ""; display: inline-block; vertical-align: middle; width: 3pt; height: 3pt; margin: 0 8.2pt 0 -11.2pt; border-radius: 50%; background: #3c3132; }
+  li + li { margin-top: 2pt; }
   .item { break-inside: avoid; }
   .item + .item { margin-top: 5pt; }
   .edu h3 + ul, .lang h3 + ul { margin-top: 1pt; }
   .job { break-inside: avoid; }
   .job + .job { margin-top: 9pt; }
-  .job-head { display: flex; justify-content: space-between; gap: 12pt; font-weight: 600; margin-bottom: 6pt; }
+  .job-head { display: flex; justify-content: space-between; gap: 12pt; font-weight: 600; margin-bottom: 4pt; }
   .job-head a { text-decoration: none; }
+  .stack { margin-top: 2pt; }
+  .stack b { font-weight: 600; }
   .proj h3, .skill h3 { font-weight: 700; }
   .skill + .skill { margin-top: 8pt; }
 </style>
@@ -48,13 +56,13 @@
     <h1>MUHAMMED KHALED ALSAYED</h1>
     <p class="role">FULL-STACK DEVELOPER</p>
     <p class="contact">Tripoli, Libya • +218 92 7784849 • muhammedelshreef50@gmail.com</p>
-    <p><a href="https://alsayed.ly/">alsayed.ly</a> • <a href="https://github.com/MuhammedElshreef">GitHub</a> • <a href="https://www.linkedin.com/in/muhammed-alsayed-0611bb2a3/">LinkedIn</a></p>
+    <p class="links"><a href="https://alsayed.ly/">alsayed.ly</a> • <a href="https://github.com/MuhammedElshreef">github.com/MuhammedElshreef</a> • <a href="https://www.linkedin.com/in/muhammed-alsayed-0611bb2a3/">linkedin.com/in/muhammed-alsayed-0611bb2a3</a></p>
   </header>
   <hr>
 
   <section>
-    <h2>PERSONAL STATEMENT</h2>
-    <p class="just">Full-stack developer with hands-on experience building and shipping production web applications, comfortable working on both the front end and the back end. I care about clean, maintainable code and interfaces that are simple to use. I learn new tools quickly, work well in a team, and enjoy sharing what I know with the people I work with.</p>
+    <h2>SUMMARY</h2>
+    <p class="just">Full-stack developer with hands-on experience building and shipping production web applications, comfortable working on both the front end and the back end. I work mainly with Laravel, Vue.js, Nuxt, Angular and TypeScript. I care about clean, maintainable code and interfaces that are simple to use. I learn new tools quickly, work well in a team, and enjoy sharing what I know with the people I work with.</p>
   </section>
   <hr>
 
@@ -63,22 +71,38 @@
 
     <div class="job">
       <p class="job-head"><span>Full-Stack Developer | Alaman Aljadeed | Tripoli, Libya</span><span>Jul 2026 – Present</span></p>
-      <p class="just">Working as a full-stack developer on Alaman Aljadeed's own products, including Aamin (top-up cards and digital vouchers), and on applications for its clients.</p>
+      <ul>
+        <li class="just">Rebuilt the admin dashboard of Aamin, a platform for top-up cards and digital vouchers, and keep adding features to its front end and Laravel back end.</li>
+        <li class="just">Built the back end and front end of projects for the company and its clients.</li>
+        <li class="just">Built Aamin UI, an Arabic RTL design system for the company dashboards, and websites for Alaman Aljadeed, Aamin, Addadi and clients.</li>
+      </ul>
+      <p class="stack"><b>Stack:</b> Vue 3, TypeScript, Nuxt 4, Tailwind CSS, shadcn-vue, Laravel, PHP, Inertia.js</p>
     </div>
 
     <div class="job">
       <p class="job-head"><span>Part-Time Front-end Developer | Qader co | Tripoli, Libya</span><span>May 2026 – Present</span></p>
-      <p class="just">Working at Qader co on Turista as part of a team modernizing legacy systems by developing a new, comprehensive platform for resort dashboards and building/apartment management. Turista aims to streamline hospitality and property operations, delivering efficient digital solutions for resort and real estate management.</p>
+      <ul>
+        <li class="just">Rebuilding the Turista resort dashboard in Vue 3 and TypeScript, moving it from a legacy system to a new Laravel REST API, including phone and OTP login, registration and password reset.</li>
+        <li class="just">Built the Turista buildings and apartments web app in Nuxt, with role-based page access, searchable data tables, maps, and Arabic and English support.</li>
+        <li class="just">Cover the login, session and API layers with unit tests in Vitest.</li>
+      </ul>
+      <p class="stack"><b>Stack:</b> Vue 3, Nuxt, TypeScript, Pinia, Tailwind CSS, TanStack Table, Leaflet, Vitest</p>
     </div>
 
     <div class="job">
       <p class="job-head"><span>Full-Stack Developer | Tadamon for <a href="https://libyana.ly/">Libyana</a> | Tripoli, Libya</span><span>Dec 2025 – Jul 2026</span></p>
-      <p class="just">Worked at Tadamon Company as an outsource developer for Libyana, contributing to the development of LibyanaHub, a comprehensive e-learning and fitness coaching platform. LibyanaHub aims to empower Libyan users with access to online courses, professional fitness coaching, and educational content, supporting both Arabic and English to serve users across Libya.</p>
+      <ul>
+        <li class="just">Built LibyanaHub, the e-learning and fitness coaching platform of Libya's leading mobile operator, as an outsourced developer through Tadamon.</li>
+        <li class="just">Delivered course enrollment, fitness coach subscriptions with tiered pricing, an admin dashboard, and full Arabic and English support with an RTL layout.</li>
+        <li class="just">Built LibyanaHub Collab (Tadawee), a patient record module made with medical students, in Laravel and Filament.</li>
+      </ul>
+      <p class="stack"><b>Stack:</b> Angular, TypeScript, PrimeNG, Laravel, Filament, MySQL</p>
     </div>
 
     <div class="job">
       <p class="job-head"><span>Front-end Developer (Internship) | Mataa | Tripoli, Libya</span><span>Jan 2024 – Apr 2024</span></p>
-      <p class="just">Worked at Mataa Company as part of a team developing the company’s dashboard. Mataa is the largest shopping application in Libya, specializing in providing original products from renowned international brands. Their goal is to offer the best shopping experience to customers across all Libyan cities.</p>
+      <ul>
+        <li class="just">Worked in a team building the internal dashboard of Mataa, the largest shopping app in Libya, which sells original products from international brands.</li>      </ul>
     </div>
   </section>
   <hr>
@@ -87,24 +111,12 @@
     <h2>PROJECTS</h2>
 
     <div class="item proj">
-      <h3>LibyanaHub Platform</h3>
-      <ul><li class="just">A comprehensive e-learning and fitness coaching platform for the Libyan market. Features course enrollment, fitness coach subscriptions with tiered pricing, admin dashboard, and full Arabic/English bilingual support with RTL layout. Built with Angular, TypeScript and PrimeNG.</li></ul>
-    </div>
-    <div class="item proj">
-      <h3>LibyanaHub Collab (Tadawee)</h3>
-      <ul><li class="just">A core module of the LibyanaHub platform, built in collaboration with medical students to track and monitor patient health. Features patient record management, medical history tracking, and streamlined communication between healthcare providers. Built with Laravel and Filament.</li></ul>
-    </div>
-    <div class="item proj">
       <h3>Records and Statistics System (Libyan government, public sector)</h3>
       <ul><li class="just">A registration and reporting system for a Libyan public-sector client, built as a freelancer. Covers 18 admin modules, role-based permissions, an audit log and Arabic PDF reports. Built with Laravel 13, Filament 5 and Pest.</li></ul>
     </div>
     <div class="item proj">
       <h3>Aamin, Addadi and Alaman Aljadeed Websites</h3>
       <ul><li class="just">Bilingual marketing websites for Alaman Aljadeed and two of its products. Arabic-first with a full RTL layout and an English version of every page, built with Nuxt 4 and generated as static pages.</li></ul>
-    </div>
-    <div class="item proj">
-      <h3>Aamin UI Kit</h3>
-      <ul><li class="just">An Arabic, RTL-first design system for dashboards: ready-made layouts and components that other projects install from a shared registry. Built with Vue 3, TypeScript, Tailwind CSS 4 and shadcn-vue.</li></ul>
     </div>
     <div class="item proj">
       <h3>Orders Management System</h3>
@@ -118,8 +130,8 @@
       <h3>Libya Roots</h3>
       <ul>
         <li class="just">Tourism platform showcasing Libya’s culture and historical landmarks. Users explore categorized destinations, view locations on maps, and save favorites. University project (ITGS303), built with Angular.</li>
-        <li>Visit Website: <a href="https://libya-roots.vercel.app/">libya-roots.vercel.app</a></li>
-        <li>View Source: <a href="https://github.com/MuhammedElshreef/libya-roots">github.com/MuhammedElshreef/libya-roots</a></li>
+        <li>Website: <a href="https://libya-roots.vercel.app/">libya-roots.vercel.app</a></li>
+        <li>Source: <a href="https://github.com/MuhammedElshreef/libya-roots">github.com/MuhammedElshreef/libya-roots</a></li>
       </ul>
     </div>
   </section>
@@ -129,7 +141,7 @@
     <h2>SKILLS</h2>
     <div class="item skill">
       <h3>Frontend</h3>
-      <ul><li>HTML, CSS, Tailwind CSS, JavaScript, TypeScript</li><li>Vue.js, Nuxt.js, Angular, React, Astro</li></ul>
+      <ul><li>HTML, CSS, Tailwind CSS, JavaScript, TypeScript</li><li>Vue.js, Nuxt.js, Pinia, Angular, React, Astro</li><li>shadcn-vue, PrimeNG, Inertia.js, RTL and bilingual (Arabic/English) interfaces</li></ul>
     </div>
     <div class="item skill">
       <h3>Backend</h3>
@@ -137,21 +149,20 @@
     </div>
     <div class="item skill">
       <h3>Tools &amp; Testing</h3>
-      <ul><li>Git, GitHub, Vite, Pest</li></ul>
+      <ul><li>Git, GitHub, Vite, Pest, Vitest</li></ul>
     </div>
   </section>
   <hr>
 
   <section class="edu">
     <h2>EDUCATION</h2>
-    <div class="item"><h3>Bachelor of information technology, University of Tripoli</h3><ul><li>2023 – Present</li></ul></div>
+    <div class="item"><h3>Bachelor of Information Technology, University of Tripoli</h3><ul><li>2023 – Expected 2027</li></ul></div>
   </section>
   <hr>
 
   <section class="lang">
     <h2>LANGUAGES</h2>
-    <div class="item"><h3>Arabic</h3><ul><li>Native language</li></ul></div>
-    <div class="item"><h3>English</h3><ul><li>Intermediate</li></ul></div>
+    <ul><li><b>Arabic:</b> Native</li><li><b>English:</b> Intermediate</li></ul>
   </section>
 </body>
 </html>
