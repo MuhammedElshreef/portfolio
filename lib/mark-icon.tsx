@@ -1,7 +1,33 @@
 import { ImageResponse } from "next/og";
-import { brand, rakkasArabic } from "@/lib/og-fonts";
+import { brand, jetbrainsMono } from "@/lib/og-fonts";
 
-/** The "م" mark in Rakkas, cyan on the ground colour, in a rounded square */
+/** The ">_" prompt mark, the same one the header uses, in a rounded square */
+export function PromptMark({ size }: { size: number }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        fontFamily: "JetBrains Mono",
+        fontWeight: 800,
+        fontSize: Math.round(size * 0.5),
+        lineHeight: 1,
+        letterSpacing: Math.round(size * -0.02),
+        color: brand.accent,
+      }}
+    >
+      {">_"}
+    </div>
+  );
+}
+
+export const promptMarkFont = async () => ({
+  name: "JetBrains Mono",
+  data: await jetbrainsMono(800),
+  weight: 800 as const,
+  style: "normal" as const,
+});
+
 export async function markIcon(px: number) {
   return new ImageResponse(
     (
@@ -16,24 +42,9 @@ export async function markIcon(px: number) {
           borderRadius: Math.round(px * 0.22),
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            fontFamily: "Rakkas",
-            fontSize: Math.round(px * 0.92),
-            lineHeight: 1,
-            color: brand.accent,
-            marginTop: Math.round(px * -0.26),
-          }}
-        >
-          م
-        </div>
+        <PromptMark size={px} />
       </div>
     ),
-    {
-      width: px,
-      height: px,
-      fonts: [{ name: "Rakkas", data: await rakkasArabic(), weight: 400, style: "normal" }],
-    },
+    { width: px, height: px, fonts: [await promptMarkFont()] },
   );
 }

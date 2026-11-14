@@ -8,10 +8,10 @@ import { join } from "node:path";
 const fontsource = (pkg: string, file: string) =>
   readFile(join(process.cwd(), "node_modules", "@fontsource", pkg, "files", file));
 
-export const rakkasArabic = () => fontsource("rakkas", "rakkas-arabic-400-normal.woff");
 export const bricolage = (weight: 500 | 800) =>
   fontsource("bricolage-grotesque", `bricolage-grotesque-latin-${weight}-normal.woff`);
-export const jetbrainsMono = () => fontsource("jetbrains-mono", "jetbrains-mono-latin-500-normal.woff");
+export const jetbrainsMono = (weight: 500 | 800 = 500) =>
+  fontsource("jetbrains-mono", `jetbrains-mono-latin-${weight}-normal.woff`);
 
 export const brand = {
   ground: "#07090c",

@@ -105,8 +105,8 @@ export default function Home() {
       <header className="nav" id="nav">
         <div className="wrap nav-in">
           <a className="brand" href="#hero" data-scroll="" aria-label={nav.brandLabel}>
-            <span className="brand-ar" lang="ar" dir="rtl">
-              {seo.arabicName}
+            <span className="brand-mono" aria-hidden="true">
+              <i>&gt;</i>alsayed<i className="brand-cur">_</i>
             </span>
           </a>
           <nav className="nav-links" aria-label={nav.sectionsLabel}>

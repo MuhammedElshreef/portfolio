@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { hero, seo } from "@/lib/content";
-import { bricolage, brand, jetbrainsMono, rakkasArabic } from "@/lib/og-fonts";
+import { PromptMark, promptMarkFont } from "@/lib/mark-icon";
+import { bricolage, brand, jetbrainsMono } from "@/lib/og-fonts";
 
 export const alt = seo.title;
 export const size = { width: 1200, height: 630 };
@@ -27,14 +28,13 @@ function stars(count: number) {
   });
 }
 
-// Share card in the Ice palette. The full Arabic name is left out: Satori does not
-// shape Rakkas's joined letters the way browsers do, while the single "م" renders true.
+// Share card in the Ice palette, with the same ">_" mark as the favicon
 export default async function Image() {
-  const [display800, display500, mono, arab] = await Promise.all([
+  const [display800, display500, mono, markFont] = await Promise.all([
     bricolage(800),
     bricolage(500),
     jetbrainsMono(),
-    rakkasArabic(),
+    promptMarkFont(),
   ]);
   const domain = new URL(seo.url).host;
   return new ImageResponse(
@@ -82,18 +82,7 @@ export default async function Image() {
             boxShadow: "0 0 90px rgba(51,199,216,0.25)",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              fontFamily: "Rakkas",
-              fontSize: 276,
-              lineHeight: 1,
-              marginTop: -95,
-              color: brand.accent,
-            }}
-          >
-            م
-          </div>
+          <PromptMark size={300} />
         </div>
         <div
           style={{
@@ -145,7 +134,7 @@ export default async function Image() {
         { name: "Bricolage", data: display800, weight: 800, style: "normal" },
         { name: "Bricolage", data: display500, weight: 500, style: "normal" },
         { name: "JetBrains Mono", data: mono, weight: 500, style: "normal" },
-        { name: "Rakkas", data: arab, weight: 400, style: "normal" },
+        markFont,
       ],
     },
   );
