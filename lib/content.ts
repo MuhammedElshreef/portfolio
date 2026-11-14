@@ -156,11 +156,11 @@ export const experience = {
     },
   ] satisfies ExperienceItem[],
   education: {
-    degree: "BSc in Software Engineering",
+    degree: "Bachelor of Information Technology (Software Engineering)",
     institution: "University of Tripoli",
-    date: "2023 - Present",
+    date: "2023 - Expected 2027",
     from: "2023",
-    to: "Present",
+    to: "Expected 2027",
     description: "Studying software engineering alongside the work above.",
   },
   currentBadge: "Now",
@@ -318,7 +318,7 @@ export const projects = {
       kind: "Records and reporting",
       title: "Records and Statistics System",
       description:
-        "A registration and reporting system for a Libyan public-sector client, built as a freelancer: 18 admin modules, role-based permissions, an audit log, and Arabic PDF reports, with an automated test suite.",
+        "A records and statistics system for a Libyan public-sector client, built as a freelancer. Staff register records and turn them into statistics and Arabic PDF reports, with role-based permissions, a full audit log and an automated test suite.",
       techs: ["Laravel 13", "Filament 5", "PHP 8.3", "Pest", "mPDF"],
       links: [],
     },
