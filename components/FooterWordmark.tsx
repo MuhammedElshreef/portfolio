@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ScrollTrigger } from "@/lib/gsap";
-import { fontsReady, prefersReducedMotion } from "@/lib/store";
+import { clamp, fontsReady, prefersReducedMotion } from "@/lib/store";
 
 /*
   The handle as one huge outlined word across the foot of the page, fitted to the column
@@ -29,7 +28,9 @@ export default function FooterWordmark({ text }: { text: string }) {
     };
     fit();
     fontsReady().then(() => {
-      if (alive) fit();
+      if (!alive) return;
+      fit();
+      if (motion) fill();
     });
     let lastW = el.clientWidth;
     const ro = new ResizeObserver(() => {
@@ -39,15 +40,29 @@ export default function FooterWordmark({ text }: { text: string }) {
     });
     ro.observe(el);
 
-    let st: ScrollTrigger | null = null;
-    if (!prefersReducedMotion()) {
-      const fill = (self: ScrollTrigger) => el.style.setProperty("--p", self.progress.toFixed(4));
-      st = ScrollTrigger.create({ trigger: el, start: "top bottom", end: "max", onUpdate: fill, onRefresh: fill });
+    // Measured on every scroll, not cached: the page's height still changes after load
+    // (fonts, the fit above), and a stale end left the fill short at the very bottom.
+    const fill = () => {
+      const vh = window.innerHeight;
+      const start = el.getBoundingClientRect().top + window.scrollY - vh;
+      // Within a pixel of the end counts as the end (zoomed pages scroll in fractions)
+      const span = document.documentElement.scrollHeight - vh - 1 - start;
+      const p = span > 0 ? clamp((window.scrollY - start) / span, 0, 1) : 1;
+      el.style.setProperty("--p", p.toFixed(4));
+    };
+    const motion = !prefersReducedMotion();
+    if (motion) {
+      fill();
+      addEventListener("scroll", fill, { passive: true });
+      addEventListener("resize", fill);
     }
     return () => {
       alive = false;
       ro.disconnect();
-      st?.kill();
+      if (motion) {
+        removeEventListener("scroll", fill);
+        removeEventListener("resize", fill);
+      }
       el.style.removeProperty("--p");
       el.style.fontSize = "";
     };
