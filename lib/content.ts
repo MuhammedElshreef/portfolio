@@ -440,7 +440,8 @@ export const contact = {
   subheading:
     "Have a project in mind, a role to fill, or just want to talk web? My inbox is open.",
   email: "muhammedelshreef50@gmail.com",
-  cv: { title: "CV", url: "/Muhammed-Alsayed-CV.pdf" },
+  // The version changes whenever the file does (see next.config.ts)
+  cv: { title: "CV", url: `/Muhammed-Alsayed-CV.pdf?v=${process.env.CV_VERSION}` },
   socials: [
     { title: "GitHub", url: "https://github.com/MuhammedElshreef" },
     { title: "LinkedIn", url: "https://www.linkedin.com/in/muhammed-alsayed-0611bb2a3/" },
