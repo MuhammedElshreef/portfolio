@@ -258,10 +258,12 @@ export default function Home() {
             <span className="foot-copy">{footer.copyright}</span>
             <span className="foot-names" lang="ar" dir="rtl">
               <span className="foot-ar">{seo.arabicName}</span>
-              <span className="foot-aka">{footer.arabicAka}</span>
+              <span className="foot-aka">{footer.arabicRole}</span>
             </span>
-            <button type="button" className="foot-top" id="foot-top">
-              {footer.backToTop}
+            <button type="button" className="foot-top" id="foot-top" aria-label={footer.backToTop}>
+              <i aria-hidden="true">↑</i>
+              <span aria-hidden="true">{footer.backToTopCmd}</span>
+              <span className="foot-cur" aria-hidden="true" />
             </button>
           </footer>
         </section>

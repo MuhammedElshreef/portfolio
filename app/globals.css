@@ -597,8 +597,21 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
 .foot-names { display: grid; justify-items: center; gap: 2px; }
 .foot-ar { font: 400 26px/1.4 var(--arab); color: var(--acc); }
 .foot-aka { font: 500 13px/1.5 system-ui, "Segoe UI", Tahoma, sans-serif; color: var(--muted); }
-.foot-top { background: none; border: 0; cursor: pointer; color: var(--text); font-weight: 600; padding: 8px 0; }
-.foot-top:hover { color: var(--acc); }
+/* Back to top as a terminal command, like the >alsayed_ logo: "↑ cd ~" and a blinking block */
+.foot-top {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; cursor: pointer;
+  font: 500 13px/1 var(--mono); color: var(--text); background: transparent;
+  border: 1px solid var(--acc-line); border-radius: 999px;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.foot-top i { font-style: normal; color: var(--acc); transition: color 0.3s var(--ease); }
+.foot-cur { width: 7px; height: 14px; background: var(--acc); animation: brand-blink 1.05s steps(1) infinite; transition: background 0.3s var(--ease); }
+@media (hover: hover) {
+  .foot-top:hover { background: var(--acc); color: var(--on-acc); border-color: var(--acc); }
+  .foot-top:hover i { color: var(--on-acc); }
+  .foot-top:hover .foot-cur { background: var(--on-acc); }
+}
+@media (prefers-reduced-motion: reduce) { .foot-cur { animation: none; } }
 
 /* ---------- Phones: one vertical rhythm for the whole page ----------
    Sections sit --sec apart, the hero is a centred poster inside the galaxy,
@@ -628,6 +641,14 @@ kbd { padding: 3px 8px; border-radius: 999px; background: var(--panel2); border:
 
   .foot { justify-content: center; text-align: center; gap: 10px 20px; }
   .foot > :first-child { order: 2; flex-basis: 100%; }
+  /* Out of the flow, sitting on the footer's top line at the right, so the names stay centred */
+  .foot { position: relative; }
+  .foot-top {
+    position: absolute; top: 0; right: max(24px, env(safe-area-inset-right, 0px)); transform: translateY(-50%);
+    padding: 8px 13px; font-size: 12px; background: var(--night);
+  }
+  .foot-cur { height: 13px; }
+  @media (max-width: 640px) { .foot-top { right: max(18px, env(safe-area-inset-right, 0px)); } }
 
   .about { gap: 24px; padding-block: var(--sec) 24px; }
   .photo { width: 100%; max-width: 420px; margin-inline: auto; }

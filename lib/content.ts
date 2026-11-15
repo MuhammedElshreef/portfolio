@@ -513,9 +513,11 @@ export const footer = {
   copyright: "© 2026 Muhammed Alsayed",
   // The handle, signed off like a terminal prompt
   handle: "Elshreef dev",
-  // Under the Arabic logo: the full Arabic name and the other name people know
-  arabicAka: "محمد خالد السيد · محمد الشريف",
+  // Under the Arabic name: the role, in Arabic
+  arabicRole: "مهندس برمجيات",
   backToTop: "Back to top",
+  // What the back-to-top button shows: a command, like the >alsayed_ logo
+  backToTopCmd: "cd ~",
 };
 
 // The command palette: the header search box (Ctrl/Cmd K)
