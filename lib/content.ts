@@ -173,13 +173,14 @@ export const projects = {
   // The ring shows these, in this order
   featured: [
     "libyanahub",
-    "records-system",
+    "libyanahub-collab",
+    "mishkat",
+    "alaman",
     "aamin",
     "addadi",
-    "alaman",
-    "libyanahub-collab",
-    "orders",
     "aamin-ui",
+    "records-system",
+    "orders",
   ],
   items: [
     {
