@@ -268,19 +268,13 @@ export const projects = {
       links: [],
     },
     {
-      slug: "zad-almuslim",
-      kind: "Quran and lessons",
-      title: "Zad Al-muslim",
+      slug: "mishkat",
+      kind: "Islamic audio library",
+      title: "Mishkat",
       description:
-        "An Islamic resource platform offering Quran recitations, radio stations, and educational lessons through a friendly, accessible interface.",
-      techs: ["Nuxt", "Pinia", "TailwindCSS", "shadcn/ui"],
-      links: [
-        { title: "Visit website", url: "https://zad-almuslim.ly/" },
-        {
-          title: "View source",
-          url: "https://github.com/Ahmedelforjani/zad-almuslim",
-        },
-      ],
+        "An Arabic audio library of Islamic knowledge: scholars' explanations of classical books, the Quran with tafsir and recitations, live Islamic radio, daily adhkar, a zakat calculator and a nearest-mosque finder. Built the web app and its landing page.",
+      techs: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Laravel"],
+      links: [{ title: "Visit website", url: "https://app.mishkat.ly/" }],
     },
     {
       slug: "easy-bank",
@@ -329,8 +323,7 @@ export const projects = {
       description:
         "The website for Aamin, a Libyan platform for distributing top-up cards and digital vouchers. Arabic-first with a full RTL layout and an English version, generated as static pages.",
       techs: ["Nuxt 4", "Vue", "Nuxt i18n", "Leaflet"],
-      links: [],
-      soon: true,
+      links: [{ title: "Visit website", url: "https://site.aamin.ly/" }],
     },
     {
       slug: "addadi",
@@ -339,8 +332,7 @@ export const projects = {
       description:
         "The website for Addadi, the app that tops up a prepaid electricity meter in Libya from a phone. Arabic-first with a full RTL layout and an English version, generated as static pages.",
       techs: ["Nuxt 4", "Vue", "Nuxt i18n", "Leaflet"],
-      links: [],
-      soon: true,
+      links: [{ title: "Visit website", url: "https://addadi.ly/" }],
     },
     {
       slug: "alaman",
@@ -349,8 +341,7 @@ export const projects = {
       description:
         "The company website for Alaman Aljadeed, a communications and IT solutions company. Arabic-first with an English version, a page for every project, and all content edited from one file.",
       techs: ["Nuxt 4", "Vue", "Tailwind CSS 4", "TypeScript"],
-      links: [],
-      soon: true,
+      links: [{ title: "Visit website", url: "https://alaman-co.ly/" }],
     },
     {
       slug: "aamin-ui",
